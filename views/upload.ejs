@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+
+    <title>NPS File Uploads Portal</title>
+  </head>
+
+  <body>
+    <li><a href="/">Home</a></li>
+    <li><a href="upload">Upload Files</a></li>
+    <div class="container-fluid text-center">
+      <div class="row mx-auto">
+        <div class="col">
+          <form ref='uploadForm' id='uploadForm' action="/upload" method="post" encType="multipart/form-data">
+            <br>
+            <h2>Select A File to Upload!</h2>
+            <br>
+            <div class="input-group mx-auto" style="max-width: 70%">
+                <label class="input-group-btn">
+                    <span class="btn btn-primary">
+                        Browse&hellip; <input type="file" style="display: none;" id="fileSelect" name="sampleFile" required>
+                    </span>
+                </label>
+                <input type="text" class="form-control" readonly>
+            </div>
+            <button type="submit" class="btn btn-primary" value="Upload!">Submit</button>
+          </form>
+        </div>
+      </div>
+    </div>
+    <br>
+    <div class="container-fluid text-center">
+      <div class="row mx-auto">
+        <div class="col">
+            <table class="table table-hover mx-auto">
+              <thead class="thead-dark">
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Files</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% if(filelist !== null){ %>
+                  <% for (var i = 0; i < filelist.length; i++) { %>
+                <tr>
+                  <th scope="row"><%= i %></th>
+                  <td><%= filelist[i] %></td>
+                </tr>    
+                  <% } %>          
+                <% } %>
+              </tbody>
+            </table>
+
+            <% if(error !== null){ %>
+              <p><%= error %></p>
+            <% } %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+      $(function() {
+        // We can attach the `fileselect` event to all file inputs on the page
+        $(document).on('change', ':file', function() {
+          var input = $(this),
+          numFiles = input.get(0).files ? input.get(0).files.length : 1,
+          label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+          input.trigger('fileselect', [numFiles, label]);
+        });
+
+        // We can watch for our custom `fileselect` event like this
+        $(document).ready( function() {
+          $(':file').on('fileselect', function(event, numFiles, label) {
+
+            var input = $(this).parents('.input-group').find(':text'),
+            log = numFiles > 1 ? numFiles + ' files selected' : label;
+
+            if( input.length ) {
+              input.val(log);
+            } else {
+              if( log ) alert(log);
+            }
+
+          });
+        });  
+      });
+    </script>
+  </body>
+</html>
