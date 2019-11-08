@@ -1,5 +1,89 @@
 <% include ../views/header %>
 
+<!-- MultiStep Form -->
+<div class="row">
+    <div class="col-md-12 ">
+        <form ref='uploadForm' id='uploadForm' action="/upload" method="post" encType="multipart/form-data">
+            <!-- progressbar -->
+            <ul id="progressbar">
+                <li class="active">Personal Details</li>
+                <li>Data Embargo</li>
+                <li>Files</li>
+            </ul>
+            <!-- fieldsets -->
+            <fieldset>
+                <h2 class="fs-title">Personal Details</h2>
+                <h3 class="fs-subtitle">Please Fill Your Personal Information</h3>
+                <input class="col-md-5" type="text" name="fname" placeholder="First Name" required="true" />
+                <input class="col-md-5" type="text" name="lname" placeholder="Last Name" required="true" />
+                <input class="col-md-5" type="email" name="email" placeholder="Email"/>
+                <input class="col-md-5" type="institute" name="institute" placeholder="Institution Affiliation"/>
+                <div class="col-md-5 text-left">
+                  <label>Data Type</label>
+                  <select name="dataType" required="true">
+                    <option value = "1">reflectance</option>
+                  </select>
+                </div>
+                <div class="col-md-5 text-left">
+                  <label>Data Source</label>
+                  <select name= "dataFrom" required="true">
+                    <option value = "1">Field</option>
+                    <option value = "1">Museum</option>
+                  </select>
+                </div>
+                <div class="col-md-12"></div>
+                <input type="button" name="next" class="next action-button" value="Next"/>
+            </fieldset>
+            <fieldset>
+                <h2 class="fs-title">Data Embargo</h2>
+                <h3 class="fs-subtitle">Has The Data Been Published?</h3>
+                <select class="col-md-5" name="dataPublished" required="true">
+                  <option value = "1">Yes</option>
+                  <option value = "1">No yet!</option>
+                </select>
+                <h3 class="fs-subtitle">Do You Want to Place an Embargo On The Data?</h3>
+                <select class="col-md-5" name="dataPublished" required="true">
+                  <option value = "1">Yes</option>
+                  <option value = "1">No yet!</option>
+                </select>
+                <br>
+                <input class="col-md-5 embargoDatePicker" type="date" name="embargoDate" value="<%= moment().format('YYYY-MM-DD'); %>" min="<%= moment().format('YYYY-MM-DD'); %>" max="<%= moment().add(1, 'years').format('YYYY-MM-DD'); %>">
+
+                <div class="col-md-12"></div>
+                <input type="button" name="previous" class="previous action-button-previous" value="Previous"/>
+                <input type="button" name="next" class="next action-button" value="Next"/>
+            </fieldset>
+            <fieldset>
+                <h2 class="fs-title">Files</h2>
+                <h3 class="fs-subtitle">MetaData File</h3>
+                <div class="col-md-12 input-group mx-auto" style="white-space: nowrap;">
+                    <label class="">
+                        <span class="btn btn-primary multi-form-file-btn">
+                            Browse&hellip; <input type="file" style="display: none;" id="fileSelect" name="sampleFile" required>
+                        </span>
+                    </label>
+                    <input class="col-md-10 multi-form-file-text" type="text" class="form-control" readonly>
+                </div>
+                <h3 class="fs-subtitle">Raw Files (compressed into a single zip file)</h3>
+                <div class="col-md-12 input-group mx-auto" style="white-space: nowrap;">
+                    <label class="">
+                        <span class="btn btn-primary multi-form-file-btn">
+                            Browse&hellip; <input type="file" style="display: none;" id="rawFileSelect" name="rawFile" required>
+                        </span>
+                    </label>
+                    <input class="col-md-10 multi-form-file-text" type="text" class="form-control" readonly>
+                </div>
+                <input type="button" name="previous" class="previous action-button-previous" value="Previous"/>
+                <button type="submit" class="multi-form-submit-btn" value="Upload!">Submit</button>
+            </fieldset>
+        </form>
+    </div>
+</div>
+
+
+<!-- /.MultiStep Form -->
+
+<!--
 <div class="container" id ="submissionForm">
   <h2>Stacked form</h2>
   <form action="/submissionInfo" method="post">
@@ -20,7 +104,6 @@
     <button type="submit" class="btn btn-primary">Submit</button>
   </form>
 </div>
-
 <div class="container-fluid text-center">
   <div class="row mx-auto">
     <div class="col">
@@ -41,6 +124,8 @@
     </div>
   </div>
 </div>
+-->
+<!--
 <br>
 <div class="container-fluid text-center">
   <div class="row mx-auto">
@@ -70,5 +155,6 @@
     </div>
   </div>
 </div>
+-->
 
 <% include ../views/footer %>

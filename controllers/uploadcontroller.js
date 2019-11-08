@@ -5,6 +5,7 @@ var MetaDataModel = require('../models/metadatamodel')
 const testFolder = './uploads/';
 const fs = require('fs');
 const app = express();
+const moment = require('moment');
 
 
 exports.startUpload = function(req, res) {
@@ -14,7 +15,7 @@ exports.startUpload = function(req, res) {
 exports.getUpload = function(req, res) {
   let filenames = get_files();
 
-  res.render('upload', {filelist: filenames, error: null});
+  res.render('upload', {filelist: filenames, moment: moment, error: null});
 };
 
 exports.postUpload = function(req, res, next) {
@@ -34,7 +35,7 @@ exports.postUpload = function(req, res, next) {
 
   sampleFile.mv(uploadPath, function(err) {
     if (err) {
-      res.render('upload', {filelist: null, error: 'Error, please try again' + err});
+      res.render('upload', {filelist: null, moment: moment, error: 'Error, please try again' + err});
     }
 
     let filenames = get_files();
@@ -43,9 +44,9 @@ exports.postUpload = function(req, res, next) {
 	  if (err) return handleError(err);
 	  console.log("saved!");
 	  // saved!
-	});
+    });
   
-    res.render('upload', {filelist: filenames, error: null});
+    res.render('index', {notice: "Data Uploaded Successfully! Confirmation Email will be sent soon!", error: null});
       
   });
 };

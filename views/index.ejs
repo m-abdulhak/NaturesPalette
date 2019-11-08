@@ -1,4 +1,17 @@
 <% include ../views/header %>
-    
+
+
+<% if (typeof notice !== 'undefined'){ %>
+<div class="col-ms-12 text-center">
+	<div class="alert alert-success" role="alert">
+		<%= notice %>
+	</div>     
+</div>
+<% } %>    
+
+<h1 class="text-center" style="width:100%; height:200px;">
+Nature's Palette Home Page
+</h1>
+
 <% include ../views/footer %>
     
