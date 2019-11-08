@@ -6,7 +6,12 @@ const testFolder = './uploads/';
 const fs = require('fs');
 const app = express();
 
-exports.getUploads = function(req, res) {
+
+exports.startUpload = function(req, res) {
+  res.render('startUpload', {error: null});
+};
+
+exports.getUpload = function(req, res) {
   let filenames = get_files();
 
   res.render('upload', {filelist: filenames, error: null});

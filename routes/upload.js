@@ -3,9 +3,9 @@ var router = express.Router();
 
 var upload_controller = require('../controllers/uploadcontroller');
 
-/* GET home page. */
-router.get('/', upload_controller.getUploads);
+router.get('/startUpload', upload_controller.startUpload);
 
+router.get('/', upload_controller.getUpload);
 
 router.post('/', upload_controller.postUpload);
 
