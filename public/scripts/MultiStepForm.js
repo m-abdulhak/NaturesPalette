@@ -1,3 +1,20 @@
+$(".data-published-select").change(function() {
+  if($(".data-published-select").val()==1){
+    $(".data-published-section").removeClass("hidden");
+  } else{
+    $(".data-published-section").addClass("hidden");
+  }
+});
+
+$(".data-embargo-select").change(function() {
+  if($(".data-embargo-select").val()==1){
+    $(".embargoDatePicker").removeClass("hidden");
+  } else{
+    $(".embargoDatePicker").addClass("hidden");
+  }
+});
+
+
 //jQuery time
 var current_fs, next_fs, previous_fs; //fieldsets
 var left, opacity, scale; //fieldset properties which we will animate

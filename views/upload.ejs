@@ -35,19 +35,23 @@
                 <input type="button" name="next" class="next action-button" value="Next"/>
             </fieldset>
             <fieldset>
-                <h2 class="fs-title">Data Embargo</h2>
+                <h2 class="fs-title">Data Details</h2>
                 <h3 class="fs-subtitle">Has The Data Been Published?</h3>
-                <select class="col-md-5" name="dataPublished" required="true">
+                <select class="col-md-5 data-published-select" name="dataPublished" required="true">
+                  <option value = "0">No yet!</option>
                   <option value = "1">Yes</option>
-                  <option value = "1">No yet!</option>
-                </select>
-                <h3 class="fs-subtitle">Do You Want to Place an Embargo On The Data?</h3>
-                <select class="col-md-5" name="dataPublished" required="true">
-                  <option value = "1">Yes</option>
-                  <option value = "1">No yet!</option>
                 </select>
                 <br>
-                <input class="col-md-5 embargoDatePicker" type="date" name="embargoDate" value="<%= moment().format('YYYY-MM-DD'); %>" min="<%= moment().format('YYYY-MM-DD'); %>" max="<%= moment().add(1, 'years').format('YYYY-MM-DD'); %>">
+                <div class="col-md-12 data-published-section hidden">               
+                  <input class="col-md-5" type="text" name="reference" placeholder="Citation of the publication"/>
+                  <input class="col-md-5" type="text" name="doi" placeholder="Digital object identifie"/>
+                </div> 
+                <h3 class="fs-subtitle">Do You Want to Place an Embargo On The Data?</h3>
+                <select class="col-md-5 data-embargo-select" name="dataEmbargo" required="true">
+                  <option value = "0">No</option>
+                  <option value = "1">Yesy</option>
+                </select>
+                <input class="col-md-5 embargoDatePicker hidden" type="date" name="embargoDate" value="<%= moment().format('YYYY-MM-DD'); %>" min="<%= moment().format('YYYY-MM-DD'); %>" max="<%= moment().add(1, 'years').format('YYYY-MM-DD'); %>">
 
                 <div class="col-md-12"></div>
                 <input type="button" name="previous" class="previous action-button-previous" value="Previous"/>
