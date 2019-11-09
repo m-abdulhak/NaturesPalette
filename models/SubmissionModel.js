@@ -6,10 +6,11 @@ var mongoose = require('mongoose');
 //Define a schema
 var Schema = mongoose.Schema;
 
-var SubmissionModelSchema = new Schema({
+var SubmissionSchema = new Schema({
   id: String,
-  rawFileid: String,
-  metaDataFileId: Number,
+  submissionInfoId: String,
+  rawFileId: String,
+  metaDataFileId: String,
   recordId: String,
   creationTime: { type: Date, default: Date.now() }
   },
@@ -17,4 +18,4 @@ var SubmissionModelSchema = new Schema({
 );
 
 //Export function to create "SomeModel" model class
-module.exports = mongoose.model('Submission', SubmissionModelSchema );
+module.exports = mongoose.model('Submission', SubmissionSchema );

@@ -6,8 +6,9 @@ var mongoose = require('mongoose');
 //Define a schema
 var Schema = mongoose.Schema;
 
-var SubmissionInfoModelSchema = new Schema({
+var SubmissionInfoSchema = new Schema({
   id: String,
+  submissionId: String,
   recordId: Number,
   name: String, 
   email: String,
@@ -26,4 +27,4 @@ var SubmissionInfoModelSchema = new Schema({
 );
 
 //Export function to create "SomeModel" model class
-module.exports = mongoose.model('SubmissionInfo', SubmissionInfoModelSchema );
+module.exports = mongoose.model('SubmissionInfo', SubmissionInfoSchema );

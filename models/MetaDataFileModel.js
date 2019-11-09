@@ -8,6 +8,8 @@ var Schema = mongoose.Schema;
 
 var MetaDataFileSchema = new Schema({
     metaDataFileId: Number,
+    path: String,
+  	submissionId: String,
     name: String,
     creationTime: { type: Date, default: Date.now() }
   },

@@ -8,7 +8,8 @@ var Schema = mongoose.Schema;
 
 var RawFileSchema = new Schema({
   rawFileid: String,
-  field: Integer,
+  submissionId: String,
+  field: Number,
   name: String,
   type: String,
   path: String,
