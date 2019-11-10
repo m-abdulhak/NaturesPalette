@@ -28,7 +28,7 @@ exports.postUpload = function(req, res, next) {
   // verify request parameters 
   err = {};
   if(!verifyHelper.verifyUploadRequest(req,err)){
-    res.render('upload', {error: "No files were uploaded! Error Occured: " + err.details});
+    res.status(403).send("No files were uploaded! Error Occured: " + err.details);
     return;
   }
 
@@ -79,7 +79,7 @@ exports.postUpload = function(req, res, next) {
       console.log("rawFileInstance save ERROR! " + err);
   });
 
-  res.render('index', {notice: "Data Uploaded Successfully! Confirmation Email will be sent soon!", error: null});
+  res.send("Data Uploaded Successfully! Confirmation Email will be sent soon!");
 };
 
 // get all filse within folder (for testing only)

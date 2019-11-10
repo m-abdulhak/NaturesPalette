@@ -27,7 +27,7 @@ exports.verifyUploadRequest = function(req,err) {
     return false;
   }
 
-  // TODO: All Other (online) verifications 
+  // TODO: All Other 'online' request-related verifications 
 
   return true;
 }

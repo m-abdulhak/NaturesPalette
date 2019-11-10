@@ -1,9 +1,14 @@
 <% include ../views/header %>
 
-<% if (typeof error !== 'undefined'){ %>
+<% if (typeof error !== 'undefined' && error != null){ %>
 <div class="col-ms-12 text-center">
-  <div class="alert alert-failure" role="alert">
+  <div class="alert alert-danger" role="alert">
     <%= error %>
+  </div>     
+</div>
+<% } else {%>    
+<div class="col-ms-12 text-center">
+  <div id="uploadPageAlert" class="alert hidden" role="alert">
   </div>     
 </div>
 <% } %>    
@@ -97,3 +102,6 @@
 </div>
 
 <% include ../views/footer %>
+
+<!-- jQuery and the Form Plugin-->
+<script src="http://malsup.github.com/jquery.form.js"></script> 
