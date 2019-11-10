@@ -7,6 +7,7 @@ const moment = require('moment');
 var mongoose = require('mongoose');
 
 var uploadHelper = require('../helpers/uploadHelper');
+var verifyHelper = require('../helpers/dataVerificationHelper');
 
 var SubmissionModel = require('../models/SubmissionModel');
 var SubmissionInfoModel = require('../models/SubmissionInfoModel');
@@ -25,8 +26,11 @@ exports.getUpload = function(req, res) {
 
 exports.postUpload = function(req, res, next) {
   // verify request parameters 
-  if(!verifyUploadParameters(req))
-    res.status(400).send('No files were uploaded.');
+  err = {};
+  if(!verifyHelper.verifyUploadRequest(req,err)){
+    res.render('upload', {error: "No files were uploaded! Error Occured: " + err.details});
+    return;
+  }
 
   // create submission object and set all ids 
   let submissionInstance = {};
@@ -90,24 +94,6 @@ function get_files(argument) {
   });
 
   return filenames;
-}
-
-// TODO: move to helper?
-function verifyUploadParameters(req){
-  // verify request has exactly 2 files
-  if (!req.files || Object.keys(req.files).length != 2) {
-    return false;
-  }
-
-  // TODO: verify request includes expected parameters (fname,lname,metaFile,rawFile,....)
-
-  // TODO: verify metaFile type is csv
-
-  // TODO: verify rawFile type is zip 
-
-  // TODO: All Other (online) verifications 
-
-  return true;
 }
 
 // TODO: move to helper?
