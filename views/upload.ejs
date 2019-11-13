@@ -28,10 +28,15 @@
             <fieldset>
                 <h2 class="fs-title">Personal Details</h2>
                 <h3 class="fs-subtitle">Please Fill Your Personal Information</h3>
-                <input class="col-md-5" type="text" name="fname" placeholder="First Name" required="true" />
-                <input class="col-md-5" type="text" name="lname" placeholder="Last Name" required="true" />
-                <input class="col-md-5" type="email" name="email" placeholder="Email"/>
-                <input class="col-md-5" type="institute" name="institute" placeholder="Institution Affiliation"/>
+                <input class="col-md-5" type="text" name="fname" placeholder="First Name" required="true"  onchange="validatefname()" onfocusout="validatefname()"/>
+                <span class="col-md-5" type="text" id="fnameError" style="display: none;color:red">Sorry, first name is required</span>
+                <input class="col-md-5" type="text" name="lname" placeholder="Last Name" required="true"  onchange="validatelname()" onfocusout="validatelname()" />
+                <span class="col-md-5" type="text" id="lnameError" style="display: none;color:red">Sorry, last name is required</span>
+                <input class="col-md-5" type="email" name="email" placeholder="Email" onchange="validateemail()"  onfocusout="validateemail()"/>
+                <span class="col-md-5" type="text" id="emailError" style="display: none;color:red">Sorry, email is required</span>
+                <input class="col-md-5" type="institute" name="institute" placeholder="Institution Affiliation" onchange="validateinstitute()"  onfocusout="validateinstitute()"/>
+                <span class="col-md-5" type="text" id="instituteError" style="display: none;color:red">Sorry, institution affiliation is required</span>
+
                 <div class="col-md-5 text-left">
                   <label>Data Type</label>
                   <select name="dataType" required="true">
@@ -46,7 +51,7 @@
                   </select>
                 </div>
                 <div class="col-md-12"></div>
-                <input type="button" name="next" class="next action-button" value="Next"/>
+                <input type="button" name="next" class="next action-button" value="Next"  onmouseover="validate(this)" id = "mybtn"/>
             </fieldset>
             <fieldset>
                 <h2 class="fs-title">Data Details</h2>
@@ -106,3 +111,70 @@
 
 <!-- jQuery and the Form Plugin-->
 <script src="http://malsup.github.com/jquery.form.js"></script> 
+<script>
+  function validatefname() {
+    if(uploadForm.fname.value == ""){
+      $("#fnameError").show ();
+          return false;
+    }
+    else{
+      $("#fnameError").hide();
+      $("#mybtn").attr("disabled",false);
+      return true;
+    }
+  
+  }
+  
+  function validatelname() {
+    if(uploadForm.lname.value == ""){
+      $("#lnameError").show ();
+      return false;
+  
+    }
+    else{
+      $("#lnameError").hide();
+      $("#mybtn").attr("disabled",false);
+      return true;
+  
+    }
+  
+  }
+  
+  function validateemail() {
+    if(uploadForm.email.value == "" || !uploadForm.email.value.includes("@")){
+      $("#emailError").show ();
+      return false;
+  
+    }
+    else{
+      $("#emailError").hide();
+      $("#mybtn").attr("disabled",false);
+      return true;
+  
+    }
+  
+  }
+   
+  
+  function validateinstitute() {
+    if(uploadForm.institute.value == ""){
+      $("#instituteError").show ();
+      return false;
+  
+    }
+    else{
+      $("#instituteError").hide();
+      $("#mybtn").attr("disabled",false);
+      return true;
+    }
+  }
+  
+  function validate(element){
+  if (validatefname() && validateemail() && validatelname() && validateinstitute()) {
+    element.disabled = false;
+  } else {
+    element.disabled = true;
+  }
+  }
+  
+  </script>
