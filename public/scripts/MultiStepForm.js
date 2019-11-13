@@ -16,11 +16,13 @@ $(".data-embargo-select").change(function() {
 
 // prepare the form when the DOM is ready 
 $(document).ready(function() { 
+    zip.workerScriptsPath = "/scripts/ziplib/";
+
     var options = { 
         target:        '#uploadPageAlert',   // target element(s) to be updated with server response 
         beforeSubmit:  showRequest,  // pre-submit callback 
         success:       showResponse,  // post-submit callback
-        resetForm: true,
+        //resetForm: true,
  
         // other available options: 
         //url:       url         // override for form's 'action' attribute 
@@ -63,7 +65,18 @@ function showRequest(formData, jqForm, options) {
  
     // here we could return false to prevent the form from being submitted; 
     // returning anything other than false will allow the form submit to continue 
-    return true; 
+
+    showAlert("","loading");
+
+    var errors = "";
+    if(validateUploadForm(errors)){
+      return true;
+    }
+    else{
+      showAlert(errors,"fail");
+    }
+
+    return false; 
 } 
  
 // post-submit callback 
@@ -80,19 +93,40 @@ function showResponse(responseText, statusText, xhr, $form)  {
     // is the json data object returned by the server 
  
     //alert('status: ' + statusText + '\n\nresponseText: \n' + responseText + '\n\nThe output div should have already been updated with the responseText.');
-    //console.log(statusText);
-    $("#uploadPageAlert").text(responseText);
-    
-    if(statusText == "success"){
+    //console.log(statusText);   
+    if(statusText=="success"){
+      showAlert(responseText,"success");
+    }else{
+      showAlert(responseText,"fail")
+    }
+} 
+
+// TODO: implement front end validation
+function validateUploadForm(){
+  return true;
+}
+
+// show alert
+function showAlert(alertMsg,alertType) {
+    if(alertType=="loading"){
+      $("#uploadPageAlert").text("");
+      $("#loadingGif").removeClass("hidden");
+    }
+    else if(alertType == "success"){
+      $("#loadingGif").addClass("hidden");    
+      $("#uploadPageAlert").text(alertMsg);
+      $("#uploadPageAlert").removeClass("hidden");  
       $("#uploadPageAlert").addClass("alert-success");
       $("#uploadPageAlert").removeClass("alert-danger");
-    } else{
+    } 
+    else if(alertType == "fail"){
+      $("#loadingGif").addClass("hidden");    
+      $("#uploadPageAlert").text(alertMsg);
+      $("#uploadPageAlert").removeClass("hidden");  
       $("#uploadPageAlert").removeClass("alert-success");
       $("#uploadPageAlert").addClass("alert-danger");  
     }
-
-    $("#uploadPageAlert").removeClass("hidden");     
-} 
+}
 
 //jQuery time
 var current_fs, next_fs, previous_fs; //fieldsets

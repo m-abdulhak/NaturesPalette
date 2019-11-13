@@ -8,6 +8,7 @@
 </div>
 <% } else {%>    
 <div class="col-ms-12 text-center">
+  <img id="loadingGif" class="hidden" src="/images/loading.gif">
   <div id="uploadPageAlert" class="alert hidden" role="alert">
   </div>     
 </div>
@@ -87,9 +88,9 @@
                 </div>
                 <h3 class="fs-subtitle">Raw Files (compressed into a single zip file)</h3>
                 <div class="col-md-12 input-group mx-auto" style="white-space: nowrap;">
-                    <label class="">
+                    <label class="" id="rawFileSelectLabel">
                         <span class="btn btn-primary multi-form-file-btn">
-                            Browse&hellip; <input type="file" style="display: none;" id="rawFileSelect" name="rawFile" accept=".zip">
+                            Browse&hellip; <input type="file" style="display: none;" id="rawFileSelect" name="rawFile" accept="application/zip">
                         </span>
                     </label>
                     <input class="col-md-10 multi-form-file-text" type="text" class="form-control" readonly >

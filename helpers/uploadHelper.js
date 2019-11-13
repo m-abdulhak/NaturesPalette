@@ -4,14 +4,10 @@ const path = require('path');
 const fs = require('fs');
 const app = express();
 
-exports.uploadFileToServer = function(file) {
+exports.uploadFileToServer = function(file,callBackFun) {
   let uploadPath = path.dirname(__dirname) + '/uploads/' + file.name;
 
-  file.mv(uploadPath, function(err) {
-    if (err) {
-      res.render('upload', {filelist: null, moment: moment, error: 'Error, please try again' + err}); 
-  	}
-  });
+  file.mv(uploadPath, callBackFun);
 
-  return uploadPath;
+  return path.resolve(path.normalize(uploadPath));
 }
