@@ -39,7 +39,7 @@ exports.postUpload = function(req, res, next) {
   // set submissionInfo object from request paramters
   uploadSet.submissionInfo = extractSubmissionInfoFromReqBody(req.body);
 
-  // create MetaFile object, upload meta file to server, set path and generate new _id 
+  // upload meta file to server
   // TODO: metafile path not present in schema? extract and delete?
   uploadSet.metaFile.path = uploadHelper.uploadFileToServer(req.files.metaFile, function(err) {
     if (err){
@@ -47,20 +47,36 @@ exports.postUpload = function(req, res, next) {
       res.status(403).send("No files were uploaded! Error Occured: " + err.details);
     }
 
-    // create RawFile object, upload raw file to server, set path and generate new _id 
+    // TODO: Do meta file header validations here
+
+    // upload raw file to server 
     uploadSet.rawFile.path = uploadHelper.uploadFileToServer(req.files.rawFile,function(err) {
       if (err){
         console.log("Error with raw file upload!"); 
         res.status(403).send("No files were uploaded! Error Occured: " + err.details);
       }
-        
-      var rawFilesInZip = zipHelper.getFileNamesInZip(uploadSet.rawFile.path);
-      console.log(rawFilesInZip);
+      
+      // TODO: Do meta file rows validation against raw files here
+  
+      // TODO: Get list of all rows in meta file
 
+      // TOFO: Validate that all met file rows contain required values
+
+      // TODO: validate that raw files in zip file and the meta file rows match, 
+      // use this function to get list of raw files in zip:
+      // var rawFileNamesInZip = zipHelper.getFileNamesInZip(uploadSet.rawFile.path);
+
+      //console.log(rawFilesInZip);
+
+      var rawFilesInZip = zipHelper.unzip(uploadSet.rawFile.path);
+      //console.log(rawFilesInZip);
+
+      // extract all raw files from zip
       rawFilesInZip.forEach(function(zipEntry) {
         console.log(zipEntry);
       }); 
 
+      // TODO: Map raw files to meta rows and create a MetadataInformation and a raw file object for each mapping 
       if (saveUploadObjectsToDB(uploadSet)){
         res.send("Data Uploaded Successfully! Confirmation Email will be sent soon!");
       }
@@ -125,20 +141,6 @@ function saveUploadObjectsToDB(uploadSet) {
   });
 
   return true;
-}
-
-// get all filse within folder (for testing only)
-// TODO: remove after finishing testing
-const testFolder = './uploads/';
-function get_files(argument) {
-  let filenames = [];
-
-  fs.readdirSync(testFolder).forEach(file => {
-    //console.log(file);
-    filenames.push(file);
-  });
-
-  return filenames;
 }
 
 // TODO: move to helper?
