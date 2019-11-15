@@ -92,7 +92,7 @@ exports.getRawFileNamesFromMetaFile = function (metaFileUrl,err) {
   var lines = fileContents.toString().split('\n').filter(x=>x!=null&&x!="");
 
   if(lines.length<2){
-    err.details = "Meta File Error, file has no contents other than header";
+    err.details = "Meta File Error, file has no contents other than header!";
     return false;
   }
   
@@ -101,22 +101,28 @@ exports.getRawFileNamesFromMetaFile = function (metaFileUrl,err) {
   firstRowWithError = 0;
   rawFileNames = [];
   
-  for(var i =0;i<lines.length;i++){
+  for(var i =1;i<lines.length;i++){
     var values = lines[i].toString().split(',');
+    var fileName = values[fileNameColIndex].trim();
 
-    if(!values[fileNameColIndex].trim() == ""){
+    if(fileName == null || fileName == ""){
       firstRowWithError = i;
       break;
     }
 
-    rawFileNames.push(values[fileNameColIndex]);
+    rawFileNames.push(fileName);
   }
   
   if(firstRowWithError.length > 0){
     err.details = "Meta File Error, No File name specified in line : " + missingColumn;
     return false;
-  }
+  }  
   
+  if(arrayHasDuplication(rawFileNames, err)){
+    err.details = "Meta File Error, raw file name duplication: " + err.details;
+    return false;
+  }
+
   return rawFileNames;
 }
 
@@ -127,4 +133,18 @@ getRawFileNameColumnIndex = function (metaFileHeaderLine) {
   });
   
   return metaFileHeaderFields.findIndex(x=>x=="filename");
+}
+
+arrayHasDuplication = function(array,err) {
+  var alreadySeen = [];
+  
+  for (const str of array){
+    if (alreadySeen.indexOf(str)>-1){
+      err.details = str;  
+      return true;
+    }
+    alreadySeen.push(str);
+  }
+
+  return false;
 }
