@@ -56,6 +56,8 @@ exports.postUpload = function(req, res, next) {
       return;
     }
 
+    // TODO: Validate that all meta file rows contain All required values
+
     // upload raw file to server 
     uploadSet.rawFile.path = uploadHelper.uploadFileToServer(req.files.rawFile,function(err) {
       if (err){
@@ -75,13 +77,10 @@ exports.postUpload = function(req, res, next) {
         return;
       }
 
-      // TOFO: Validate that all meta file rows contain required values
-
       // TODO: validate that raw files in zip file and the meta file rows match, 
       // use this function to get list of raw files in zip:
-      var rawFileNamesInZip = zipHelper.getFileNamesInZip(uploadSet.rawFile.path);
-
-      //console.log(rawFilesInZip);
+      // var rawFileNamesInZip = zipHelper.getFileNamesInZip(uploadSet.rawFile.path);
+      //console.log(rawFileNamesInZip);
 
       var rawFilesInZip = zipHelper.unzip(uploadSet.rawFile.path);
       //console.log(rawFilesInZip);

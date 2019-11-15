@@ -7,12 +7,8 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var SubmissionInfoSchema = new Schema({
-  id: String,
   submissionId: String,
   recordId: Number,
-  name: String, 
-  email: String,
-  isDataPublished: Boolean,
   researchId: Number,
   metaDataCollectionId: Number,
   typeOfData: String,
@@ -22,6 +18,8 @@ var SubmissionInfoSchema = new Schema({
   embargo: Boolean,
   releaseDate: { type: Date, default: Date.now() },
   doi:String
+  name: String, 
+  email: String,
   },
   { strict: false }
 );

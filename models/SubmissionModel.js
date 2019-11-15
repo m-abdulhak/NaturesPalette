@@ -7,7 +7,6 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var SubmissionSchema = new Schema({
-  id: String,
   submissionInfoId: String,
   rawFileId: String,
   metaDataFileId: String,

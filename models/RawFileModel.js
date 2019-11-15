@@ -7,15 +7,12 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var RawFileSchema = new Schema({
-  rawFileid: String,
   submissionId: String,
-  field: Number,
   name: String,
   type: String,
   path: String,
   uploadDate: { type: Date, default: Date.now() },
   creationTime: { type: Date, default: Date.now() }
-
   },
   { strict: false }
 );
