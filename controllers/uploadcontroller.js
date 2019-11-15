@@ -65,14 +65,21 @@ exports.postUpload = function(req, res, next) {
       }
       
       // TODO: Do meta file rows validation against raw files here
-  
       // TODO: Get list of all rows in meta file
+      var rawFileNamesError = {};
+      var rawFileNamesInMetaFile = verifyHelper.getRawFileNamesFromMetaFile(uploadSet.metaFile.path,rawFileNamesError);
 
-      // TOFO: Validate that all met file rows contain required values
+      if(!rawFileNamesInMetaFile){
+        console.log("Error with meta files raw file names!"); 
+        res.status(403).send("No files were uploaded! Error Occured: " + rawFileNamesError.details);
+        return;
+      }
+
+      // TOFO: Validate that all meta file rows contain required values
 
       // TODO: validate that raw files in zip file and the meta file rows match, 
       // use this function to get list of raw files in zip:
-      // var rawFileNamesInZip = zipHelper.getFileNamesInZip(uploadSet.rawFile.path);
+      var rawFileNamesInZip = zipHelper.getFileNamesInZip(uploadSet.rawFile.path);
 
       //console.log(rawFilesInZip);
 

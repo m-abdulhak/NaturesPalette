@@ -84,3 +84,47 @@ exports.verifyMetaFileHeaderFields = function (metaFileType,metaFileUrl,err) {
   
   return true;
 }
+
+exports.getRawFileNamesFromMetaFile = function (metaFileUrl,err) {
+  err.details = "";
+
+  var fileContents = fs.readFileSync(metaFileUrl);
+  var lines = fileContents.toString().split('\n').filter(x=>x!=null&&x!="");
+
+  if(lines.length<2){
+    err.details = "Meta File Error, file has no contents other than header";
+    return false;
+  }
+  
+  var fileNameColIndex = getRawFileNameColumnIndex(lines[0]);
+
+  firstRowWithError = 0;
+  rawFileNames = [];
+  
+  for(var i =0;i<lines.length;i++){
+    var values = lines[i].toString().split(',');
+
+    if(!values[fileNameColIndex].trim() == ""){
+      firstRowWithError = i;
+      break;
+    }
+
+    rawFileNames.push(values[fileNameColIndex]);
+  }
+  
+  if(firstRowWithError.length > 0){
+    err.details = "Meta File Error, No File name specified in line : " + missingColumn;
+    return false;
+  }
+  
+  return rawFileNames;
+}
+
+getRawFileNameColumnIndex = function (metaFileHeaderLine) {
+  
+  metaFileHeaderFields = metaFileHeaderLine.toString().split(',').map(element => {
+    return element.toLowerCase().trim();
+  });
+  
+  return metaFileHeaderFields.findIndex(x=>x=="filename");
+}
