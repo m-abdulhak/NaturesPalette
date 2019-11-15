@@ -32,7 +32,7 @@ exports.unzip = function(fileUrl){
 }
 
 // get all filse within folder (for testing only)
-function get_files(folder) {
+get_files = function(folder) {
   let filenames = [];
 
   fs.readdirSync(folder).forEach(file => {

@@ -20,7 +20,7 @@ exports.startUpload = function(req, res) {
 };
 
 exports.getUpload = function(req, res) {
-  let filenames = get_files();
+  let filenames = {};
 
   res.render('upload', {filelist: filenames, moment: moment, error: null});
 };
@@ -45,15 +45,23 @@ exports.postUpload = function(req, res, next) {
     if (err){
       console.log("Error with meta file upload!"); 
       res.status(403).send("No files were uploaded! Error Occured: " + err.details);
+      return;
     }
 
     // TODO: Do meta file header validations here
+    var metaFieldsError = {};
+    if (!verifyHelper.verifyMetaFileHeaderFields(uploadSet.submissionInfo.dataFrom,uploadSet.metaFile.path,metaFieldsError)){
+      console.log("Error with meta file header!"); 
+      res.status(403).send("No files were uploaded! Error Occured: " + metaFieldsError.details);
+      return;
+    }
 
     // upload raw file to server 
     uploadSet.rawFile.path = uploadHelper.uploadFileToServer(req.files.rawFile,function(err) {
       if (err){
         console.log("Error with raw file upload!"); 
         res.status(403).send("No files were uploaded! Error Occured: " + err.details);
+        return;
       }
       
       // TODO: Do meta file rows validation against raw files here
@@ -79,6 +87,7 @@ exports.postUpload = function(req, res, next) {
       // TODO: Map raw files to meta rows and create a MetadataInformation and a raw file object for each mapping 
       if (saveUploadObjectsToDB(uploadSet)){
         res.send("Data Uploaded Successfully! Confirmation Email will be sent soon!");
+        return;
       }
 
       });
@@ -148,8 +157,9 @@ function extractSubmissionInfoFromReqBody(requestBody){
   let submissionInfo = {};
 
   // TODO: Extract All parameters 
-  submissionInfo.name = requestBody.fname;
+  submissionInfo.name = requestBody.fname + " " + requestBody.lname;
   submissionInfo.email = requestBody.email;
+  submissionInfo.dataFrom = requestBody.dataFrom;
 
   return submissionInfo; 
 }

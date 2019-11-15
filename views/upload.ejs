@@ -28,30 +28,26 @@
             <fieldset>
                 <h2 class="fs-title">Personal Details</h2>
                 <h3 class="fs-subtitle">Please Fill Your Personal Information</h3>
-                <input class="col-md-5" type="text" name="fname" placeholder="First Name" required="true"  onchange="validatefname()" onfocusout="validatefname()"/>
-                <span class="col-md-5" type="text" id="fnameError" style="display: none;color:red">Sorry, first name is required</span>
-                <input class="col-md-5" type="text" name="lname" placeholder="Last Name" required="true"  onchange="validatelname()" onfocusout="validatelname()" />
-                <span class="col-md-5" type="text" id="lnameError" style="display: none;color:red">Sorry, last name is required</span>
-                <input class="col-md-5" type="email" name="email" placeholder="Email" onchange="validateemail()"  onfocusout="validateemail()"/>
-                <span class="col-md-5" type="text" id="emailError" style="display: none;color:red">Sorry, email is required</span>
-                <input class="col-md-5" type="institute" name="institute" placeholder="Institution Affiliation" onchange="validateinstitute()"  onfocusout="validateinstitute()"/>
-                <span class="col-md-5" type="text" id="instituteError" style="display: none;color:red">Sorry, institution affiliation is required</span>
+                <input class="col-md-5" id="uploadFormFname" type="text" name="fname" placeholder="First Name" required="true"  onchange="validatefname()" onfocusout="validatefname()"/>
+                <input class="col-md-5" id="uploadFormLname" type="text" name="lname" placeholder="Last Name" required="true"  onchange="validatelname()" onfocusout="validatelname()" />
+                <input class="col-md-5" id="uploadFormEmail" type="email" name="email" placeholder="Email" onchange="validateemail()"  onfocusout="validateemail()"/>
+                <input class="col-md-5" id="uploadFormInstitute" type="institute" name="institute" placeholder="Institution Affiliation" onchange="validateinstitute()"  onfocusout="validateinstitute()"/>
 
                 <div class="col-md-5 text-left">
                   <label>Data Type</label>
                   <select name="dataType" required="true">
-                    <option value = "1">reflectance</option>
+                    <option value = "reflectance">reflectance</option>
                   </select>
                 </div>
                 <div class="col-md-5 text-left">
                   <label>Data Source</label>
                   <select name= "dataFrom" required="true">
-                    <option value = "1">Field</option>
-                    <option value = "1">Museum</option>
+                    <option value = "field">Field</option>
+                    <option value = "museum">Museum</option>
                   </select>
                 </div>
                 <div class="col-md-12"></div>
-                <input type="button" name="next" class="next action-button" value="Next"  onmouseover="validate(this)" id = "mybtn"/>
+                <input type="button" name="next" id="uploadFormStep1NextButton" class="next action-button" value="Next"  onfocus="validateStep(1)"/>
             </fieldset>
             <fieldset>
                 <h2 class="fs-title">Data Details</h2>
@@ -78,7 +74,7 @@
                   <% }%>
                 <div class="col-md-12"></div>
                 <input type="button" name="previous" class="previous action-button-previous" value="Previous"/>
-                <input type="button" name="next" class="next action-button" value="Next"/>
+                <input type="button" id="uploadFormStep1NextButton" name="next" class="next action-button" value="Next" onfocus="validateStep(2)"/>
             </fieldset>
             <fieldset>
                 <h2 class="fs-title">Files</h2>
@@ -101,7 +97,7 @@
                     <input class="col-md-10 multi-form-file-text" type="text" class="form-control" readonly >
                 </div>
                 <input type="button" name="previous" class="previous action-button-previous" value="Previous"/>
-                <button type="submit" class="multi-form-submit-btn" value="Upload!">Submit</button>
+                <button type="submit" id="uploadFormSubmitButton" class="multi-form-submit-btn" value="Upload!" onfocus="validateStep(3)">Submit</button>
             </fieldset>
         </form>
     </div>
@@ -114,26 +110,24 @@
 <script>
   function validatefname() {
     if(uploadForm.fname.value == ""){
-      $("#fnameError").show ();
+      $("#uploadFormFname").addClass("validationError");
           return false;
     }
     else{
-      $("#fnameError").hide();
-      $("#mybtn").attr("disabled",false);
+      $("#uploadFormFname").removeClass("validationError");
+      $("#uploadFormStep1NextButton").attr("disabled",false);
       return true;
     }
-  
   }
   
   function validatelname() {
     if(uploadForm.lname.value == ""){
-      $("#lnameError").show ();
-      return false;
-  
+      $("#uploadFormLname").addClass("validationError");
+          return false;
     }
     else{
-      $("#lnameError").hide();
-      $("#mybtn").attr("disabled",false);
+      $("#uploadFormLname").removeClass("validationError");
+      $("#uploadFormStep1NextButton").attr("disabled",false);
       return true;
   
     }
@@ -142,13 +136,12 @@
   
   function validateemail() {
     if(uploadForm.email.value == "" || !uploadForm.email.value.includes("@")){
-      $("#emailError").show ();
-      return false;
-  
+      $("#uploadFormEmail").addClass("validationError");
+          return false;
     }
     else{
-      $("#emailError").hide();
-      $("#mybtn").attr("disabled",false);
+      $("#uploadFormEmail").removeClass("validationError");
+      $("#uploadFormStep1NextButton").attr("disabled",false);
       return true;
   
     }
@@ -157,24 +150,46 @@
    
   
   function validateinstitute() {
-    if(uploadForm.institute.value == ""){
+    /*if(uploadForm.institute.value == ""){
       $("#instituteError").show ();
       return false;
-  
     }
     else{
       $("#instituteError").hide();
       $("#mybtn").attr("disabled",false);
       return true;
-    }
+    }*/
+    return true;
   }
   
-  function validate(element){
-  if (validatefname() && validateemail() && validatelname() && validateinstitute()) {
-    element.disabled = false;
-  } else {
-    element.disabled = true;
-  }
+  function validateStep(step){
+    switch (step) {
+      case 1:
+        if (validatefname() && validateemail() && validatelname() && validateinstitute()) {
+          $("#uploadFormStep1NextButton").attr("disabled", false);
+        } else {
+          $("#uploadFormStep1NextButton").attr("disabled", true);
+        }
+        break;
+      case 2:
+        if (true) {
+          $("#uploadFormStep2NextButton").attr("disabled", false);
+        } else {
+          $("#uploadFormStep2NextButton").attr("disabled", true);
+        }
+        break;
+      case 3:
+        if (true) {
+          $("#uploadFormSubmitButton").attr("disabled", false);
+        } else {
+          $("#uploadFormSubmitButton").attr("disabled", true);
+        }
+        break;
+    
+      default:
+        break;
+    }
+
   }
   
   </script>

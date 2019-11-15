@@ -4,18 +4,32 @@ const path = require('path');
 const fs = require('fs');
 const app = express();
 
-meta_file_obj_arr = ["InstitutionCode",
-"CollectionCode",
-"CatalogNumber",
-"Genus",
-"SpecificEpithet",
-"InfraspecificEpithet",
-"Sex",
-"Country",
-"Part",
-"Replicate",
-"File name"
-]
+const reflectance_museum_header_fields = [
+  "filename",
+  "institutioncode",
+  "cataloguenumber",
+  "genus",
+  "specificepithet",
+  "patch",
+  "lightangle1",
+  "lightangle2",
+  "probeangle1",
+  "probeangle2",
+  "replicate"
+  ];
+
+const reflectance_field_header_fields = [
+  "filename",
+  "uniqueid",
+  "genus",
+  "specificepithet",
+  "patch",
+  "lightangle1",
+  "lightangle2",
+  "probeangle1",
+  "probeangle2",
+  "replicate"
+  ];
 
 
 exports.verifyUploadRequest = function(req,err) {
@@ -35,25 +49,38 @@ exports.verifyUploadRequest = function(req,err) {
     return false;
   }
   
+  // TODO: All Other 'online' request-related verifications 
+
+  return true;
+}
+
+exports.verifyMetaFileHeaderFields = function (metaFileType,metaFileUrl,err) {
+  err.details = "";
+    
   // verify if each column is existing
-  var array = [];
-  var fileContents = fs.readFileSync('./uploads/'+req.files.metaFile.name);
+  var metaFileHeaderFields = [];
+  var fileContents = fs.readFileSync(metaFileUrl);
   var lines = fileContents.toString().split('\n');
-  string = lines[0].toString();
-  array = string.split(',');
-  missingColumn = []
-for(var i =0;i<meta_file_obj_arr.length;i++)
-// check = meta_file_obj_arr[i].replace(/\s/g, "");
-  if(!array.includes(meta_file_obj_arr[i])){
-    missingColumn.push(meta_file_obj_arr[i]);
+  
+  metaFileHeaderFields = lines[0].toString().split(',').map(element => {
+    return element.toLowerCase().trim();
+  });
+
+  reference_header_fields = metaFileType.toLowerCase() == "field"? reflectance_field_header_fields : reflectance_museum_header_fields;
+
+  missingColumn = [];
+  
+  for(var i =0;i<reference_header_fields.length;i++){
+    // check = meta_file_obj_arr[i].replace(/\s/g, "");
+    if(!metaFileHeaderFields.includes(reference_header_fields[i])){
+      missingColumn.push(reference_header_fields[i]);
+    }
   }
   
   if(missingColumn.length > 0){
-  err.details = "Sorry, the following fields are missing: "+missingColumn.join();
+    err.details = "Meta File Header is missing the following fields: " + missingColumn.join();
   return false;
   }
-
-  // TODO: All Other 'online' request-related verifications 
-
+  
   return true;
 }
