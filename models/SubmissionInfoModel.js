@@ -17,7 +17,7 @@ var SubmissionInfoSchema = new Schema({
   reference: String,
   embargo: Boolean,
   releaseDate: { type: Date, default: Date.now() },
-  doi:String
+  doi:String,
   name: String, 
   email: String,
   },
