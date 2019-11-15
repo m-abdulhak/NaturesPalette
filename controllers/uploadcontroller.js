@@ -57,6 +57,15 @@ exports.postUpload = function(req, res, next) {
     }
 
     // TODO: Validate that all meta file rows contain All required values
+    // TODO: change this function to verify that all required fields for this template exist in every row, instead of checking for raw file only
+    var metaDataRowsError = {};
+    uploadSet.metaDetaInformation = verifyHelper.verifyAndGetMetaDataRows(uploadSet.metaFile.path,uploadSet.submissionInfo.dataFrom,metaDataRowsError);
+
+    if(!uploadSet.metaDetaInformation){
+      console.log("Error with meta files raw file names!"); 
+      res.status(403).send("No files were uploaded! Error Occured: " + metaDataRowsError.details);
+      return;
+    }
 
     // upload raw file to server 
     uploadSet.rawFile.path = uploadHelper.uploadFileToServer(req.files.rawFile,function(err) {
@@ -68,14 +77,7 @@ exports.postUpload = function(req, res, next) {
       
       // TODO: Do meta file rows validation against raw files here
       // TODO: Get list of all rows in meta file
-      var rawFileNamesError = {};
-      var rawFileNamesInMetaFile = verifyHelper.getRawFileNamesFromMetaFile(uploadSet.metaFile.path,rawFileNamesError);
 
-      if(!rawFileNamesInMetaFile){
-        console.log("Error with meta files raw file names!"); 
-        res.status(403).send("No files were uploaded! Error Occured: " + rawFileNamesError.details);
-        return;
-      }
 
       // TODO: validate that raw files in zip file and the meta file rows match, 
       // use this function to get list of raw files in zip:
@@ -90,7 +92,30 @@ exports.postUpload = function(req, res, next) {
         console.log(zipEntry);
       }); 
 
+      if(rawFilesInZip.length!= uploadSet.metaDetaInformation.length){
+        res.status(403).send("No files were uploaded! Error Occured: Number of Raw Files does not match number of rows in meta file!");
+        return;
+      }
+
       // TODO: Map raw files to meta rows and create a MetadataInformation and a raw file object for each mapping 
+      for (const rawFile of rawFilesInZip) {
+        // TODO: get meta row from met file corresponding to this file
+        var rawFileName = path.basename(rawFile);
+        
+        var metaData = uploadSet.metaDetaInformation.find(obj => {
+          return obj.filename === rawFileName;
+        });
+
+        if(metaData == undefined || metaData==null){
+          res.status(403).send("No files were uploaded! Error Occured: Raw File " + rawFileName + " does not match any row in meta file!");
+          return;
+        }
+        
+        // TODO: create raw file
+        // TODO: set metadataobject rawFileId to created rawFileID
+      }
+
+      // Save complete dataset to DB
       if (saveUploadObjectsToDB(uploadSet)){
         res.send("Data Uploaded Successfully! Confirmation Email will be sent soon!");
         return;
