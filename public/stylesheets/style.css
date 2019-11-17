@@ -4,11 +4,57 @@ html{
 
 body {
   padding: 10px;
+  min-height: 100%;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+main{
+    min-height: 490px;
 }
 
 a {
   color: #00B7FF;
+}
+
+.navbar{
+    min-height: 60px;
+}
+.nav-item:hover{
+	border-bottom: 1px solid white;
+}
+
+main .main-page-btn{		
+    border-radius: 0px;
+    width: 150px;
+    height: 64px;
+    text-align: center;
+    line-height: 44px;
+    background: #61441970;
+    border: #ffffff57 1px solid;
+    font-size: large;
+}
+
+main .main-page-btn:hover{
+    color: #fff;
+    background-color: #61441970;
+    border-color: #fff;
+}
+main .main-page-btn:active{
+    color: #fff !important;
+    background-color: #614419 !important;
+    border-color: #614419  !important;
+}
+
+.jumbotron{
+	background: transparent !important;
+	min-height: 360px;
+	padding-top: 120px;
+}
+.jumbotron h1{
+	color: #fff;
+}
+.jumbotron h6{
+	color: #fff;
 }
 
 @import "/MultiStepForm.css";

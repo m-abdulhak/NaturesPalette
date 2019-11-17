@@ -1,17 +1,33 @@
 <% include ../views/header %>
 
-
 <% if (typeof notice !== 'undefined'){ %>
 <div class="col-ms-12 text-center">
 	<div class="alert alert-success" role="alert">
 		<%= notice %>
 	</div>     
 </div>
-<% } %>    
+<% } %> 
 
-<h1 class="text-center" style="width:100%; height:200px;">
-Nature's Palette Home Page
-</h1>
+<div class="jumbotron">
+	<div class="container">
+	  <h1 class="display-3">Nature's Pallete</h1>
+	  <h6>An Open-Access Digital Repository of Spectral Data</h6>
+	</div>
+</div>
+<div class="container"> 
+	<div class="row">
+	  	<div class="col-md-4 text-center" >
+	    	<a class="btn btn-secondary main-page-btn" href="/search" role="button" >Search Data</a>
+		</div>
+		<div class="col-md-4 text-center" >
+	    	<a class="btn btn-secondary main-page-btn" href="/upload/startUpload" role="button">Upload Data</a>
+		</div>
+		<div class="col-md-4 text-center" >
+	    	<a class="btn btn-secondary main-page-btn" href="#" role="button">Register</a>
+	  	</div>
+	</div>
+	<hr>
+</div>
 
 <% include ../views/footer %>
     
