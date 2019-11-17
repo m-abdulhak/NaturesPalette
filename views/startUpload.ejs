@@ -1,21 +1,27 @@
 <% include ../views/header %>
 
-<div class="text-center">
-  <h1> Submission Instructions</h1>
-  <p> Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-  tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-  quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-  consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-  cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-  proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-  <form action="/upload" method="get">
-    <div class="form-check">
-      <input type="checkbox" class="form-check-input" id="exampleCheck1" required="true">
-      <label class="form-check-label" for="exampleCheck1">I agree</label>
+
+<div class="row">
+    <div class="col-md-12 ">
+        <form ref='startUploadForm' id='uploadForm' action="/upload" method="get">
+          <fieldset>
+                <h1> Submission Instructions</h1>
+                <p> Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+                cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+                proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                <div style="display: inline-flex;">
+                  <input type="checkbox" name="agree"
+                         required="true">
+                  <label for="agree" style="width: 115px;">I Agree</label>
+                </div>
+                <br>
+                <button type="submit" id="" class="multi-form-submit-btn" value="Submit!">Submit</button>
+            </fieldset>
+        </form>
     </div>
-    <br>
-    <button type="submit" class="btn btn-primary">Submit</button>
-  </form>
 </div>
 
 <% include ../views/footer %>
