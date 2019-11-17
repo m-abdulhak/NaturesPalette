@@ -1,0 +1,40 @@
+<% include ../views/header %>
+
+<% if (typeof error !== 'undefined' && error != null){ %>
+<div class="col-ms-12 text-center">
+  <div class="alert alert-danger" role="alert">
+    <%= error %>
+  </div>     
+</div>
+<% } else {%>    
+<div class="col-ms-12 text-center">
+  <img id="loadingGif" class="hidden" src="/images/loading.gif">
+  <div id="searchPageAlert" class="alert hidden" role="alert">
+  </div>     
+</div>
+<% } %>    
+
+<!-- Search Form -->
+<div class="row">
+    <div class="col-md-12 ">
+        <form ref='searchForm' id='searchForm' action="/search" method="post" encType="multipart/form-data">
+          searchResult
+          <% if (typeof searchResult !== 'undefined' && searchResult != null){ %>
+          <div class="col-ms-12 text-center">
+            <div class="alert alert-success" role="alert">
+              <%= searchResult %>
+            </div>     
+          </div>
+          <% } else {%>    
+          <div class="col-ms-12 text-center">
+            <img id="loadingGif" class="" src="/images/loading.gif">
+            <div id="searchPageAlert" class="alert" role="alert">
+              Nothing found!
+            </div>     
+          </div>
+          <% } %>    
+        </form>
+    </div>
+</div>
+
+<% include ../views/footer %>

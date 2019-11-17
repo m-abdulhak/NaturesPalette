@@ -12,6 +12,7 @@ const models = require('./models');
 
 var indexRouter = require('./routes/index');
 var uploadRouter = require('./routes/upload');
+var searchRouter = require('./routes/search');
 var usersRouter = require('./routes/users');
 
 
@@ -34,6 +35,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/upload', uploadRouter);
+app.use('/search', searchRouter);
 
 
 // catch 404 and forward to error handler
