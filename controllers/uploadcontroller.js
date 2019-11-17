@@ -13,6 +13,7 @@ var zipHelper = require('../helpers/zipHelper');
 var SubmissionModel = require('../models/SubmissionModel');
 var SubmissionInfoModel = require('../models/SubmissionInfoModel');
 var MetaDataFileModel = require('../models/MetaDataFileModel');
+var MetaDataInformationModel = require('../models/MetaDataInformationModel');
 var RawFileModel = require('../models/RawFileModel');
 
 exports.startUpload = function(req, res) {
@@ -33,11 +34,12 @@ exports.postUpload = function(req, res, next) {
     return;
   }
 
-  // create all needed objects for the upload process
-  let uploadSet = createUploadObjectsSet();
-
   // set submissionInfo object from request paramters
-  uploadSet.submissionInfo = extractSubmissionInfoFromReqBody(req.body);
+  var subInfo = extractSubmissionInfoFromReqBody(req.body);
+
+
+  // create all needed objects for the upload process
+  let uploadSet = createUploadObjectsSet(subInfo);
 
   // upload meta file to server
   // TODO: metafile path not present in schema? extract and delete?
@@ -48,7 +50,7 @@ exports.postUpload = function(req, res, next) {
       return;
     }
 
-    // TODO: Do meta file header validations here
+    // Do meta file header validations here
     var metaFieldsError = {};
     if (!verifyHelper.verifyMetaFileHeaderFields(uploadSet.submissionInfo.dataFrom,uploadSet.metaFile.path,metaFieldsError)){
       console.log("Error with meta file header!"); 
@@ -56,12 +58,12 @@ exports.postUpload = function(req, res, next) {
       return;
     }
 
-    // TODO: Validate that all meta file rows contain All required values
-    // TODO: change this function to verify that all required fields for this template exist in every row, instead of checking for raw file only
+    // Validate that all meta file rows contain All required values
+    // verify that all required fields for this template exist in every row
     var metaDataRowsError = {};
-    uploadSet.metaDetaInformation = verifyHelper.verifyAndGetMetaDataRows(uploadSet.metaFile.path,uploadSet.submissionInfo.dataFrom,metaDataRowsError);
+    uploadSet.metaDetaInformations = verifyHelper.verifyAndGetMetaDataRows(uploadSet.metaFile.path,uploadSet.submissionInfo.dataFrom,metaDataRowsError);
 
-    if(!uploadSet.metaDetaInformation){
+    if(!uploadSet.metaDetaInformations){
       console.log("Error with meta files raw file names!"); 
       res.status(403).send("No files were uploaded! Error Occured: " + metaDataRowsError.details);
       return;
@@ -75,34 +77,29 @@ exports.postUpload = function(req, res, next) {
         return;
       }
       
-      // TODO: Do meta file rows validation against raw files here
-      // TODO: Get list of all rows in meta file
-
-
-      // TODO: validate that raw files in zip file and the meta file rows match, 
+      // validate that raw files in zip file and the meta file rows match, 
       // use this function to get list of raw files in zip:
       // var rawFileNamesInZip = zipHelper.getFileNamesInZip(uploadSet.rawFile.path);
       //console.log(rawFileNamesInZip);
 
       var rawFilesInZip = zipHelper.unzip(uploadSet.rawFile.path);
-      //console.log(rawFilesInZip);
 
       // extract all raw files from zip
       rawFilesInZip.forEach(function(zipEntry) {
         console.log(zipEntry);
       }); 
 
-      if(rawFilesInZip.length!= uploadSet.metaDetaInformation.length){
+      if(rawFilesInZip.length!= uploadSet.metaDetaInformations.length){
         res.status(403).send("No files were uploaded! Error Occured: Number of Raw Files does not match number of rows in meta file!");
         return;
       }
 
-      // TODO: Map raw files to meta rows and create a MetadataInformation and a raw file object for each mapping 
+      // Map raw files to meta rows and create a MetadataInformation and a raw file object for each mapping 
       for (const rawFile of rawFilesInZip) {
-        // TODO: get meta row from met file corresponding to this file
         var rawFileName = path.basename(rawFile);
         
-        var metaData = uploadSet.metaDetaInformation.find(obj => {
+        // get meta row from met file corresponding to this file
+        var metaData = uploadSet.metaDetaInformations.find(obj => {
           return obj.filename === rawFileName;
         });
 
@@ -111,8 +108,19 @@ exports.postUpload = function(req, res, next) {
           return;
         }
         
-        // TODO: create raw file
-        // TODO: set metadataobject rawFileId to created rawFileID
+        // create raw file object
+        var rawF = {};
+        rawF._id = mongoose.Types.ObjectId();
+        rawF.submissionId = uploadSet.submission._id;
+        rawF.name = rawFileName;
+        // TODO: confirm with client that this is the meaning of type here
+        rawF.type =  uploadSet.submissionInfo.typeOfData;
+        rawF.path = rawFile;
+        uploadSet.rawFiles.push(rawF);
+
+        // set metadataobject rawFileId to created rawFileID
+        metaData.rawFileId = rawF._id; 
+        metaData.metaDataFileId = uploadSet.metaFile._id; 
       }
 
       // Save complete dataset to DB
@@ -125,7 +133,7 @@ exports.postUpload = function(req, res, next) {
   });  
 };
 
-function createUploadObjectsSet() {
+function createUploadObjectsSet(subInfo) {
   let uploadSet = {};
   // create submission object and set all ids 
   uploadSet.submission = {};
@@ -135,11 +143,15 @@ function createUploadObjectsSet() {
   uploadSet.metaFile._id = mongoose.Types.ObjectId();
   uploadSet.metaFile.submissionId =uploadSet.submission._id;
 
+  uploadSet.metaDetaInformations = [];
+
   uploadSet.rawFile = {};
   uploadSet.rawFile._id = mongoose.Types.ObjectId();
   uploadSet.rawFile.submissionId =uploadSet.submission._id;
 
-  uploadSet.submissionInfo = {};
+  uploadSet.rawFiles = [];
+
+  uploadSet.submissionInfo = subInfo;
   uploadSet.submissionInfo._id = mongoose.Types.ObjectId();
   uploadSet.submissionInfo.submissionId =uploadSet.submission._id;
 
@@ -152,6 +164,7 @@ function createUploadObjectsSet() {
 }
 
 function saveUploadObjectsToDB(uploadSet) {
+  //console.log(uploadSet);
   SubmissionModel.create(uploadSet.submission, function (err, submission_instance) {
     if (err){
       console.log("submission save ERROR! " + err);
@@ -173,12 +186,25 @@ function saveUploadObjectsToDB(uploadSet) {
     }
   });
 
-  RawFileModel.create(uploadSet.rawFile, function (err, rawFile_instance) {
-    if (err){
-      console.log("rawFile save ERROR! " + err);
-      return false;
-    }
-  });
+  for (var i = uploadSet.rawFiles.length - 1; i >= 0; i--) {
+    rawF = uploadSet.rawFiles[i];
+    RawFileModel.create(rawF, function (err, rawFile_instance) {
+      if (err){
+        console.log("rawFile save ERROR! " + err);
+        return false;
+      }
+    });
+  }
+
+  for (var i = uploadSet.metaDetaInformations.length - 1; i >= 0; i--) {
+    metaDataRow = uploadSet.metaDetaInformations[i];
+    MetaDataInformationModel.create(metaDataRow, function (err, metaDataInformation_instance) {
+      if (err){
+        console.log("metaDataRow save ERROR! " + err);
+        return false;
+      }
+    });
+  }
 
   return true;
 }

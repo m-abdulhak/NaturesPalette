@@ -8,36 +8,39 @@ var Schema = mongoose.Schema;
 
 
 var MetaDataInformationSchema = new Schema({
-  metaDataCollectionId: Number,
-  recordId: String,
+  metadatacollectionid: Number,
+  recordid: String,
   rawFileId: String,
+  metaDataFileId: String,
 
   // reflectance field and museum template required fields
   genus: String,
-  specificEpithet: String,
-  Patch: String,
-  LightAngle1: String,
-  LightAngle2: String,
-  ProbeAngle1: String,
-  ProbeAngle2: String,
-  Replicate: String,
+  specificepithet: String,
+  patch: String,
+  lightangle1: String,
+  lightangle2: String,
+  probeangle1: String,
+  probeangle2: String,
+  replicate: String,
 
   // reflectance field template required fields
-  UniqueID: String,
+  uniqueid: String,
 
   // reflectance museum template required fields
-  institutionCode: Number,
-  catalogueNumber: Number,
+  // TODO: Confirm with client string or number
+  institutioncode: String,
+  // TODO: Confirm with client string or number
+  cataloguenumber: String,
 
   // other fields
-  collectionCode: Number,
+  collectioncode: Number,
   field: Number,
   class: String,
   order: String,
   family: String,
-  infraSpecificEpithet: String,
+  infraSpecificepithet: String,
   sex: String,
-  lifeStage: String,
+  lifestage: String,
 
   timestamp: { type: Date, default: Date.now() }
   },
