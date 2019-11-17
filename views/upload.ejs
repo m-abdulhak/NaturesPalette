@@ -28,10 +28,10 @@
             <fieldset>
                 <h2 class="fs-title">Personal Details</h2>
                 <h3 class="fs-subtitle">Please Fill Your Personal Information</h3>
-                <input class="col-md-5" id="uploadFormFname" type="text" name="fname" placeholder="First Name" required="true"  onchange="validatefname()" onfocusout="validatefname()"/>
-                <input class="col-md-5" id="uploadFormLname" type="text" name="lname" placeholder="Last Name" required="true"  onchange="validatelname()" onfocusout="validatelname()" />
-                <input class="col-md-5" id="uploadFormEmail" type="email" name="email" placeholder="Email" onchange="validateemail()"  onfocusout="validateemail()"/>
-                <input class="col-md-5" id="uploadFormInstitute" type="institute" name="institute" placeholder="Institution Affiliation" onchange="validateinstitute()"  onfocusout="validateinstitute()"/>
+                <input class="col-md-5" id="uploadFormFname" type="text" name="fname" placeholder="First Name" required="true"  oninput="validateStep(1)" onfocusout="validateStep(1)"/>
+                <input class="col-md-5" id="uploadFormLname" type="text" name="lname" placeholder="Last Name" required="true"  oninput="validateStep(1)" onfocusout="validateStep(1)" />
+                <input class="col-md-5" id="uploadFormEmail" type="email" name="email" placeholder="Email" oninput="validateStep(1)"  onfocusout="validateStep(1)"/>
+                <input class="col-md-5" id="uploadFormInstitute" type="institute" name="institute" placeholder="Institution Affiliation" onchange="validateStep(1)" onfocusout="validateinstitute()"/>
 
                 <div class="col-md-5 text-left">
                   <label>Data Type</label>
@@ -47,34 +47,34 @@
                   </select>
                 </div>
                 <div class="col-md-12"></div>
-                <input type="button" name="next" id="uploadFormStep1NextButton" class="next action-button" value="Next"  onfocus="validateStep(1)"/>
+                <input type="button" name="next" id="uploadFormStep1NextButton" class="next action-button" value="Next"  onfocus="validateStep(1)" onclick="validateStep(1)"/>
             </fieldset>
             <fieldset>
                 <h2 class="fs-title">Data Details</h2>
                 <h3 class="fs-subtitle">Has The Data Been Published?</h3>
-                <select class="col-md-5 data-published-select" name="dataPublished" required="true">
+                <select class="col-md-5 data-published-select" id="uploadFormDataPublished" name="dataPublished" required="true" onchange="validateStep(2)">
                   <option value = "0">No yet!</option>
                   <option value = "1">Yes</option>
                 </select>
                 <br>
                 <div class="col-md-12 data-published-section hidden">               
-                  <input class="col-md-5" type="text" name="reference" placeholder="Citation of the publication"/>
-                  <input class="col-md-5" type="text" name="doi" placeholder="Digital object identifie"/>
+                  <input class="col-md-5" type="text" id="uploadFormReference" name="reference" placeholder="Citation of the publication" oninput="validateStep(2)"  onfocusout="validateStep(2)"/>
+                  <input class="col-md-5" type="text" id="uploadFormDoi" name="doi" placeholder="Digital object identifier" oninput="validateStep(2)"  onfocusout="validateStep(2)"/>
                 </div> 
                 <h3 class="fs-subtitle">Do You Want to Place an Embargo On The Data?</h3>
-                <select class="col-md-5 data-embargo-select" name="dataEmbargo" required="true">
+                <select class="col-md-5 data-embargo-select" name="dataEmbargo" required="true" onchange="validateStep(2)">
                   <option value = "0">No</option>
-                  <option value = "1">Yesy</option>
+                  <option value = "1">Yes</option>
                 </select> 
                 <% if (typeof moment !== 'undefined'){ %>
                   <input class="col-md-5 embargoDatePicker hidden" type="date" name="embargoDate"
-                  value="<%= moment().format('YYYY-MM-DD'); %>" min="<%= moment().format('YYYY-MM-DD'); %>" max="<%= moment().add(1, 'years').format('YYYY-MM-DD'); %>">
+                  value="<%= moment().format('YYYY-MM-DD'); %>" min="<%= moment().format('YYYY-MM-DD'); %>" max="<%= moment().add(1, 'years').format('YYYY-MM-DD'); %>" oninput="validateStep(2)"  onfocusout="validateStep(2)">
                   <% } else {%>
-                  <input class="col-md-5 embargoDatePicker hidden" type="date" name="embargoDate">
-                  <% }%>
+                  <input class="col-md-5 embargoDatePicker hidden" type="date" name="embargoDate" oninput="validateStep(2)"  onfocusout="validateStep(2)">
+                <% }%>
                 <div class="col-md-12"></div>
                 <input type="button" name="previous" class="previous action-button-previous" value="Previous"/>
-                <input type="button" id="uploadFormStep1NextButton" name="next" class="next action-button" value="Next" onfocus="validateStep(2)"/>
+                <input type="button" id="uploadFormStep2NextButton" name="next" class="next action-button" value="Next" onfocus="validateStep(2)" onclick="validateStep(2)"/>
             </fieldset>
             <fieldset>
                 <h2 class="fs-title">Files</h2>

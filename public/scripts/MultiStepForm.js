@@ -106,7 +106,6 @@ function validateUploadForm(){
   return true;
 }
 
-
 function validatefname() {
   if(uploadForm.fname.value == ""){
     $("#uploadFormFname").addClass("validationError");
@@ -114,7 +113,6 @@ function validatefname() {
   }
   else{
     $("#uploadFormFname").removeClass("validationError");
-    $("#uploadFormStep1NextButton").attr("disabled",false);
     return true;
   }
 }
@@ -126,11 +124,8 @@ function validatelname() {
   }
   else{
     $("#uploadFormLname").removeClass("validationError");
-    $("#uploadFormStep1NextButton").attr("disabled",false);
     return true;
-
   }
-
 }
 
 function validateemail() {
@@ -143,13 +138,9 @@ function validateemail() {
   }
   else{
     $("#uploadFormEmail").removeClass("validationError");
-    $("#uploadFormStep1NextButton").attr("disabled",false);
     return true;
-
   }
-
 }
- 
 
 function validateinstitute() {
   /*if(uploadForm.institute.value == ""){
@@ -164,6 +155,45 @@ function validateinstitute() {
   return true;
 }
 
+function validateDataPublished() {
+  var dataPublished = uploadForm.dataPublished.value==1;
+  console.log("dataPublished :" + dataPublished);
+  
+  if(dataPublished){
+    if(!validateCitation() || !validateDoi()){
+      return false;
+    }
+    else
+      return true;
+  }
+  else{
+    return true;
+  }
+}
+
+function validateCitation() {
+  if(uploadForm.reference.value == ""){
+    $("#uploadFormReference").addClass("validationError");
+        return false;
+  }
+  else{
+    $("#uploadFormReference").removeClass("validationError");
+    return true;
+  }
+}
+
+function validateDoi() {
+  if(uploadForm.doi.value == ""){
+    $("#uploadFormDoi").addClass("validationError");
+        return false;
+  }
+  else{
+    $("#uploadFormDoi").removeClass("validationError");
+    return true;
+  }
+}
+
+
 function validateStep(step){
   switch (step) {
     case 1:
@@ -174,7 +204,7 @@ function validateStep(step){
       }
       break;
     case 2:
-      if (true) {
+      if (validateDataPublished()) {
         $("#uploadFormStep2NextButton").attr("disabled", false);
       } else {
         $("#uploadFormStep2NextButton").attr("disabled", true);
