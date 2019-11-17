@@ -106,6 +106,94 @@ function validateUploadForm(){
   return true;
 }
 
+
+function validatefname() {
+  if(uploadForm.fname.value == ""){
+    $("#uploadFormFname").addClass("validationError");
+        return false;
+  }
+  else{
+    $("#uploadFormFname").removeClass("validationError");
+    $("#uploadFormStep1NextButton").attr("disabled",false);
+    return true;
+  }
+}
+
+function validatelname() {
+  if(uploadForm.lname.value == ""){
+    $("#uploadFormLname").addClass("validationError");
+        return false;
+  }
+  else{
+    $("#uploadFormLname").removeClass("validationError");
+    $("#uploadFormStep1NextButton").attr("disabled",false);
+    return true;
+
+  }
+
+}
+
+function validateemail() {
+
+  var emailValid = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(uploadForm.email.value);
+  
+  if(!emailValid){
+    $("#uploadFormEmail").addClass("validationError");
+        return false;
+  }
+  else{
+    $("#uploadFormEmail").removeClass("validationError");
+    $("#uploadFormStep1NextButton").attr("disabled",false);
+    return true;
+
+  }
+
+}
+ 
+
+function validateinstitute() {
+  /*if(uploadForm.institute.value == ""){
+    $("#instituteError").show ();
+    return false;
+  }
+  else{
+    $("#instituteError").hide();
+    $("#mybtn").attr("disabled",false);
+    return true;
+  }*/
+  return true;
+}
+
+function validateStep(step){
+  switch (step) {
+    case 1:
+      if (validatefname() && validateemail() && validatelname() && validateinstitute()) {
+        $("#uploadFormStep1NextButton").attr("disabled", false);
+      } else {
+        $("#uploadFormStep1NextButton").attr("disabled", true);
+      }
+      break;
+    case 2:
+      if (true) {
+        $("#uploadFormStep2NextButton").attr("disabled", false);
+      } else {
+        $("#uploadFormStep2NextButton").attr("disabled", true);
+      }
+      break;
+    case 3:
+      if (true) {
+        $("#uploadFormSubmitButton").attr("disabled", false);
+      } else {
+        $("#uploadFormSubmitButton").attr("disabled", true);
+      }
+      break;
+  
+    default:
+      break;
+  }
+
+}
+
 // show alert
 function showAlert(alertMsg,alertType) {
     if(alertType=="loading"){
