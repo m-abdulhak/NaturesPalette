@@ -190,7 +190,15 @@ function extractSubmissionInfoFromReqBody(requestBody){
   // TODO: Extract All parameters 
   submissionInfo.name = requestBody.fname + " " + requestBody.lname;
   submissionInfo.email = requestBody.email;
+  submissionInfo.institute = requestBody.institute;
+
+  submissionInfo.typeOfData = requestBody.dataType;
   submissionInfo.dataFrom = requestBody.dataFrom;
+  submissionInfo.published = requestBody.dataPublished;
+  submissionInfo.reference = requestBody.reference;
+  submissionInfo.doi = requestBody.doi;
+  submissionInfo.embargo = requestBody.dataEmbargo;
+  submissionInfo.releaseDate = requestBody.embargoDate;
 
   return submissionInfo; 
 }

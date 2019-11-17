@@ -11,13 +11,16 @@ var SubmissionInfoSchema = new Schema({
   recordId: Number,
   researchId: Number,
   metaDataCollectionId: Number,
+  
   typeOfData: String,
   dataForm: String,
   published: Boolean,
   reference: String,
+  doi:String,
   embargo: Boolean,
   releaseDate: { type: Date, default: Date.now() },
-  doi:String,
+  
+  institute: String,
   name: String, 
   email: String,
   },
