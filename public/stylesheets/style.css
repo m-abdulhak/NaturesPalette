@@ -57,4 +57,22 @@ main .main-page-btn:active{
 	color: #fff;
 }
 
+div.alert{
+    font-size: medium;
+    font-weight: 600;
+    line-height: 135%;
+}
+
+div.alert-success{
+    color: #155724;
+    background-color: #d4eddaa1;
+    border-color: #c3e6cb;
+}
+
+div.alert-danger{
+    color: #721c24;
+    background-color: #f8d7daa1;
+    border-color: #d66f7a;
+}
+
 @import "/MultiStepForm.css";
