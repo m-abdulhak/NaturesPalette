@@ -33,7 +33,7 @@ var MetaDataInformationSchema = new Schema({
   cataloguenumber: String,
 
   // other fields
-  collectioncode: Number,
+  collectioncode: String,
   field: Number,
   class: String,
   order: String,
