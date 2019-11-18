@@ -41,6 +41,7 @@ var MetaDataInformationSchema = new Schema({
   infraSpecificepithet: String,
   sex: String,
   lifestage: String,
+  country: String,
 
   timestamp: { type: Date, default: Date.now() }
   },

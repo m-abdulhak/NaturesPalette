@@ -22,7 +22,7 @@ $(document).ready(function() {
         target:        '#uploadPageAlert',   // target element(s) to be updated with server response 
         beforeSubmit:  showRequest,  // pre-submit callback 
         success:       showResponse,  // post-submit callback
-        //resetForm: true,
+        resetForm: true,
  
         // other available options: 
         //url:       url         // override for form's 'action' attribute 

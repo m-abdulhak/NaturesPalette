@@ -41,3 +41,22 @@ get_files = function(folder) {
 
   return filenames;
 }
+
+
+exports.zip = function(fileUrls){
+    // creating archives
+    var zip = new AdmZip();
+    var rand = uuidv1();
+
+    for(var file of fileUrls){
+      // add local file
+      zip.addLocalFile(file);      
+    }
+    //
+    var willSendthis = zip.toBuffer();
+    return willSendthis;
+    // or write everything to disk
+    //var zipFileUrl = 'downloads/researchData'+ rand + '.zip';
+    //zip.writeZip(zipFileUrl);
+    //return zipFileUrl;
+}
