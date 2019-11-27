@@ -99,20 +99,60 @@ exports.downloadResults = function(req, res, next) {
     if(err){
       console.log("Error retrieving meta data information from DB: " + err);
     } else{
-      // create metadata file
+
+      // create lists of allIds of raw files and submission infos corresponding to requested meta data file
       var rawFileUrls = [];
+      var submissionInfoIds = [];
+      var submissionInfos = [];
+
       for(var metaData of metaDatas){
+        // get raw file corresponding to this data row
         var rFile = await RawFileModel.findById(metaData.rawFileId);
         rawFileUrls.push(path.resolve(path.normalize(rFile.path)));
+        
+        // get submission corrsponding to this data row
+        var submission = await SubmissionModel.findById(rFile.submissionId);
+        metaData.submissionInfoId = submission.submissionInfoId;
+        if (submissionInfoIds.indexOf(submission.submissionInfoId) === -1) {
+          submissionInfoIds.push(submission.submissionInfoId);
+
+          var submissionInfo = await SubmissionInfoModel.findById(submission.submissionInfoId);
+          submissionInfos.push(submissionInfo); 
+        }
       }
+      
+      // submission info data file location
+      var submissionInfoFileLocation = 'downloads/submissionInfo' + '-' + rand + '.csv';
+        
+      // TODO: generate submission info file content (json to csv)
+      var submissionInfoFileContent = generateSubmissionInfoFileContent(submissionInfos); 
+
+      // TODO: write submission info content to file
+      fs.writeFileSync(submissionInfoFileLocation, submissionInfoFileContent);
+
+      // meta data file location
       var metaFileLocation = 'downloads/metaData' + '-' + rand + '.csv';
-      fs.writeFile(metaFileLocation, metaDatas, 'utf8', function (err) {
+
+      // generate meta data file content (json to csv)
+      var metaDataFileContent = generateMetaFileContent(metaDatas); 
+
+      // write meta data to meta data file
+      fs.writeFile(metaFileLocation, metaDataFileContent, 'utf8', function (err) {
         if (err) {
           console.log('Some error occured - file either not saved or corrupted file saved.');
         } else{
-          console.log('It\'s saved!');
+          console.log('Meta Data file saved!');
+
+          // add submission info file to files list 
+          rawFileUrls.push(submissionInfoFileLocation);
+
+          // add meta data file to files list 
           rawFileUrls.push(metaFileLocation);
+
+          //Zip all raw files with meta data file and submission info file
           var zipFile = zipHelper.zip(rawFileUrls);  
+
+          //send file to user
           res.set('Content-Type','application/octet-stream');
           var stat = fs.statSync(zipFile);
           res.setHeader('Content-Disposition', 'attachment; filename='+path.resolve(path.normalize(zipFile)));
@@ -132,6 +172,17 @@ exports.downloadResults = function(req, res, next) {
   });
 };
 
+// TODO: Implement 
+function generateSubmissionInfoFileContent(submissionInfos) {
+  return submissionInfos;
+}
+
+// TODO: Implement 
+function generateMetaFileContent(metaData) {
+  return metaData;
+}
+
+// WHAT IS THIS??!!
 function generateMetaFile(metaDataIdsList) {
   var metaFile = generateMetaFile(metaDataIdsList);
   var rawFilesUrls = getRawFilesUrls(metaDataIdsList);
