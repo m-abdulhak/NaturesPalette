@@ -6,7 +6,7 @@ const app = express();
 
 const uuidv1 = require('uuid/v1');
  
-// var AdmZip = require('adm-zip');
+ var AdmZip = require('adm-zip');
 
 var zip = new require('node-zip')();
 
