@@ -100,7 +100,7 @@ exports.postUpload = function(req, res, next) {
         
         // get meta row from met file corresponding to this file
         var metaData = uploadSet.metaDetaInformations.find(obj => {
-          return obj.filename === rawFileName;
+          return rawFileName.includes(obj.filename.trim());
         });
 
         if(metaData == undefined || metaData==null){

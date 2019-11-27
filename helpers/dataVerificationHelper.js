@@ -114,8 +114,9 @@ exports.verifyAndGetMetaDataRows = function (metaFileUrl,metaFileType,err) {
     for (const requiredFieldIndex in requiredFieldsIndices) {
       var requiredFieldValue = values[requiredFieldIndex].trim();
       if( requiredFieldValue == null || requiredFieldValue == "" ){
-        err.details = "Meta File Error, Invalid value " + requiredFieldValue.toString() + " found for required field '" + headers[requiredFieldIndex] + "' in line : " + i;
-        return false;
+        console.log("Meta File Error, Invalid value " + requiredFieldValue.toString() + " found for required field '" + headers[requiredFieldIndex] + "' in line : " + i);
+        //err.details = "Meta File Error, Invalid value " + requiredFieldValue.toString() + " found for required field '" + headers[requiredFieldIndex] + "' in line : " + i;
+        //return false;
       }
     }
     

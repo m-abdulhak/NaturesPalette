@@ -109,13 +109,19 @@ exports.downloadResults = function(req, res, next) {
           console.log('It\'s saved!');
           rawFileUrls.push(metaFileLocation);
           var zipFile = zipHelper.zip(rawFileUrls);  
-          //res.setHeader('Content-Disposition', 'attachment; filename='+path.resolve(path.normalize(zipFile)));
-          //res.download(path.resolve(path.normalize(zipFile)));
-          //res.download(zipFile);          
           res.set('Content-Type','application/octet-stream');
-          res.set('Content-Disposition',`attachment; filename=research.zip`);
-          res.set('Content-Length',zipFile.length);
-          res.send(zipFile);
+          var stat = fs.statSync(zipFile);
+          res.setHeader('Content-Disposition', 'attachment; filename='+path.resolve(path.normalize(zipFile)));
+          res.setHeader("Content-Length",stat.size);
+          res.download(path.resolve(path.normalize(zipFile)), function (err) {
+            if (err) {
+              // Handle error, but keep in mind the response may be partially-sent
+              // so check res.headersSent
+              console.log("download error " + err);
+            } else {
+              // decrement a download credit, etc.
+            }
+          });
         }
       });      
     }
