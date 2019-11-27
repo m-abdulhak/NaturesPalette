@@ -9,6 +9,8 @@ var mongoose = require('mongoose');
 const uuidv1 = require('uuid/v1');
 var zipHelper = require('../helpers/zipHelper');
 
+const { Parser } = require('json2csv');
+
 var SubmissionModel = require('../models/SubmissionModel');
 var SubmissionInfoModel = require('../models/SubmissionInfoModel');
 var MetaDataFileModel = require('../models/MetaDataFileModel');
@@ -174,7 +176,28 @@ exports.downloadResults = function(req, res, next) {
 
 // TODO: Implement 
 function generateSubmissionInfoFileContent(submissionInfos) {
-  return submissionInfos;
+  const fields = [  'submissionId',
+                    'recordId',
+                    'researchId',
+                    'metaDataCollectionId',
+                    'typeOfData',
+                    'dataForm',
+                    'published',
+                    'reference',
+                    'doi',
+                    'embargo',
+                    'releaseDate',
+                    'institute',
+                    'name',
+                    'email'];
+  
+  try {
+    const parser = new Parser({ fields, quote: '' });
+    const csv = parser.parse(submissionInfos);
+    return csv;
+  } catch (err) {
+    console.error(err);
+  }
 }
 
 // TODO: Implement 
