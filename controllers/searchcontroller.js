@@ -73,7 +73,11 @@ function extractSearchQueryFromReq(reqBody) {
   for(var term of searchTerms){
     var termVal = getSearchTermsFor(reqBody,term);
     if(termVal!=null){
-      query[term] = termVal;
+      var termValsList = termVal.trim().split(' OR ').map(element => {
+        //return '/'+element.toLowerCase().trim()+'/i';
+        return new RegExp('\\b' + element.toLowerCase().trim() + '\\b', 'i');
+      });
+      query[term] = { $in : termValsList };
     }
   }
   return query;
