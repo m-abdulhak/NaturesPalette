@@ -111,6 +111,7 @@ exports.downloadResults = function(req, res, next) {
         // get raw file corresponding to this data row
         var rFile = await RawFileModel.findById(metaData.rawFileId);
         rawFileUrls.push(path.resolve(path.normalize(rFile.path)));
+        metaData.rawFileName = rFile.name;
         
         // get submission corrsponding to this data row
         var submission = await SubmissionModel.findById(rFile.submissionId);
@@ -126,10 +127,10 @@ exports.downloadResults = function(req, res, next) {
       // submission info data file location
       var submissionInfoFileLocation = 'downloads/submissionInfo' + '-' + rand + '.csv';
         
-      // TODO: generate submission info file content (json to csv)
+      // generate submission info file content (json to csv)
       var submissionInfoFileContent = generateSubmissionInfoFileContent(submissionInfos); 
 
-      // TODO: write submission info content to file
+      // write submission info content to file
       fs.writeFileSync(submissionInfoFileLocation, submissionInfoFileContent);
 
       // meta data file location
@@ -174,7 +175,6 @@ exports.downloadResults = function(req, res, next) {
   });
 };
 
-// TODO: Implement 
 function generateSubmissionInfoFileContent(submissionInfos) {
   const fields = [  'submissionId',
                     'recordId',
@@ -200,9 +200,39 @@ function generateSubmissionInfoFileContent(submissionInfos) {
   }
 }
 
-// TODO: Implement 
 function generateMetaFileContent(metaData) {
-  return metaData;
+  const fields = [  
+'submissionInfoId',
+'rawFileName',
+'recordid',
+'genus',
+'specificepithet',
+'patch',
+'lightangle1',
+'lightangle2',
+'probeangle1',
+'probeangle2',
+'replicate',
+'uniqueid',
+'institutioncode',
+'cataloguenumber',
+'collectioncode',
+'field',
+'class',
+'order',
+'family',
+'infraSpecificepithet',
+'sex',
+'lifestage',
+'country'];
+  
+  try {
+    const parser = new Parser({ fields, quote: '' });
+    var csv = parser.parse(metaData);
+    return csv;
+  } catch (err) {
+    console.error(err);
+  }
 }
 
 // WHAT IS THIS??!!
