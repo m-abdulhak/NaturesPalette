@@ -27,8 +27,11 @@ exports.getUpload = function(req, res) {
 };
 
 var userEmail = "";
+var setEmbargo = false;
 exports.postUpload = function(req, res, next) {
   userEmail = req.body.email;
+  setEmbargo = req.body.dataEmbargo;
+
   // verify request parameters 
   err = {};
   if(!verifyHelper.verifyUploadRequest(req,err)){
@@ -125,21 +128,26 @@ exports.postUpload = function(req, res, next) {
         metaData.metaDataFileId = uploadSet.metaFile._id; 
       }
 
+      if(setEmbargo == true){
+        res.send("Data Uploaded Successfully! But won't be released until specified embargo Date!");
+        return;
+      }
+
       // Save complete dataset to DB
       if (saveUploadObjectsToDB(uploadSet)){
         res.send("Data Uploaded Successfully! Confirmation Email will be sent soon!");
+
+        // TODO: Calculate metrics
+        // var metricsResultsList = calculateMetrics(rawFilesInZip);
+
+        // generate email body
+        var emailBody = generateUploadReport(rawFilesInZip);
+
+        // Send Email detailing metrics calculations results
+        sendEmail(userEmail,emailBody);
+
+        // TODO: Release raw files that passed the metrics calculations
       }
-
-      // TODO: Calculate metrics
-      // var metricsResultsList = calculateMetrics(rawFilesInZip);
-
-      // generate email body
-      var emailBody = generateUploadReport(rawFilesInZip);
-
-      // Send Email detailing metrics calculations results
-      sendEmail(userEmail,emailBody);
-
-      // TODO: Release raw files that passed the metrics calculations
 
       return;
       });
@@ -153,7 +161,7 @@ function generateUploadReport(rawFilesList) {
     body += "<p>" + path.basename(rawFilesList[i]) + "</p>";
   }
   body += "<br><p>The following files did not pass our verification tests and will NOT be released: </p><br>";
-  body += "<p>Thank you for using Nature's Pallete System.</p><br>";
+  body += "<p>Thank you for using Nature's Palette System.</p><br>";
   return body;
 }
 
@@ -193,10 +201,10 @@ function sendEmail(emailAddress,emailBody){
 
     // send mail with defined transport object
     let info = await transporter.sendMail({
-      from: '"Natures Pallete" <naturepallete@gmail.com>', // sender address
+      from: '"Natures Palette" <naturepallete@gmail.com>', // sender address
       to: emailAddress, // list of receivers
-      subject: "Nature's Pallete Upload Report", // Subject line
-      text: "Nature's Pallete Upload Report", // plain text body
+      subject: "Nature's Palette Upload Report", // Subject line
+      text: "Nature's Palette Upload Report", // plain text body
       html: emailBody // html body
     });
 
