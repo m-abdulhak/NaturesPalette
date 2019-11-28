@@ -103,13 +103,14 @@
           <% if (typeof searchResult !== 'undefined' && searchResult != null){ %>
           <div class="col-ms-12 text-center">
             <div class="alert alert-success" role="alert" style="line-height: 40px;">
-              Results Found: <%= searchResult.length %> 
+              Displaying <%= searchResult.length %> Unique Results 
               <% if (searchResult.length > 0 ){ %>
+              (Found <%= searchResult[0].TotalSearchResultCount %> in Total)! 
               <!--<button type="button" class="btn btn-primary" style="position: absolute; right: 10px;" onclick="downloadAllResults()">Download All</button>-->         
               <form ref='downloadForm' class="downloadForm" id='downloadForm' action="/search/downloadSearchResult" method="post">
                 <fieldset>
                   <input type="text" class="form-control hidden" name="SearchResultId" id="SearchResultId" placeholder="SearchResultId" value="<%= searchResult[0].SearchResultId %>">
-                  <button type="submit" id="" class="btn btn-primary" value="Download!">Download</button>
+                  <button type="submit" id="" class="btn btn-primary" value="Download All!">Download</button>
                 </fieldset>
               </form>
               <% } %>    
@@ -135,17 +136,17 @@
           <tbody>
             <% if(searchResult !== null){ %>
               <% for (var i = 0; i < searchResult.length; i++) { %>
-            <tr>
-              <th scope="row"><%= i %></th>
-              <td><%= searchResult[i].genus %></td>
-              <td><%= searchResult[i].specificepithet %></td>
-              <td><%= searchResult[i].infraspecificepithet %></td>
-              <td><%= searchResult[i].sex %></td>
-              <td><%= searchResult[i].lifestage %></td>
-              <td><%= searchResult[i].patch %></td>
-              <!-- <td><a class="btn" href="<%= searchResult[i].url %>">Download</a></td> -->
-              <td class="hidden metaID"><%= searchResult[i]._id %></td>
-            </tr>    
+                <tr>
+                  <th scope="row"><%= i %></th>
+                  <td><%= searchResult[i].genus %></td>
+                  <td><%= searchResult[i].specificepithet %></td>
+                  <td><%= searchResult[i].infraspecificepithet %></td>
+                  <td><%= searchResult[i].sex %></td>
+                  <td><%= searchResult[i].lifestage %></td>
+                  <td><%= searchResult[i].patch %></td>
+                  <!-- <td><a class="btn" href="<%= searchResult[i].url %>">Download</a></td> -->
+                  <td class="hidden metaID"><%= searchResult[i]._id %></td>
+                </tr>    
               <% } %>          
             <% } %>
           </tbody>

@@ -43,26 +43,32 @@ exports.postSearch = function(req, res, next) {
       searchResultIns._id = mongoose.Types.ObjectId();
 
       var results = [];
+      var resultsSigList = [];
       var ids = [];
       for(var metaData of metaDatas){
         // push id into ids list 
         ids.push(metaData._id);
 
-        // create result object and fill metadata info
-        var result = {};
-        result.SearchResultId = searchResultIns._id;
-        result._id = metaData._id;
-        result.rawFileId = metaData.rawFileId;
-        result.genus = metaData.genus;
-        result.specificepithet = metaData.specificepithet;
-        result.infraspecificepithet = metaData.infraspecificepithet;
-        result.sex = metaData.sex;
-        result.lifestage = metaData.lifestage;
-        result.patch = metaData.patch;
-        var rFile = await RawFileModel.findById(metaData.rawFileId);
-        result.url = path.resolve(path.normalize(rFile.path));
+        var sig = getSearchRowSignature(metaData);
+        if(resultsSigList.indexOf(sig) === -1){
+          // create result object and fill metadata info
+          var result = {};
+          result.SearchResultId = searchResultIns._id;
+          result.TotalSearchResultCount = metaDatas.length;
+          result._id = metaData._id;
+          result.rawFileId = metaData.rawFileId;
+          result.genus = metaData.genus;
+          result.specificepithet = metaData.specificepithet;
+          result.infraspecificepithet = metaData.infraspecificepithet;
+          result.sex = metaData.sex;
+          result.lifestage = metaData.lifestage;
+          result.patch = metaData.patch;
+          //var rFile = await RawFileModel.findById(metaData.rawFileId);
+          //result.url = path.resolve(path.normalize(rFile.path));
 
-        results.push(result);
+          results.push(result);
+          resultsSigList.push(sig);
+        }      
       }
 
       //save ids in search result
@@ -83,6 +89,12 @@ exports.postSearch = function(req, res, next) {
     }
   });
 };
+
+function getSearchRowSignature(row) {
+  if(row!=undefined && row != ""){
+    return row.genus + row.specificepithet + row.infraspecificepithet + row.sex + row.lifestage + row.patch;
+  }
+}
 
 // download search result
 exports.downloadSearchResult = function(req, res, next) {
