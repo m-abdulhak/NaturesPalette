@@ -61,4 +61,5 @@ module.exports = app;
 const port = process.env.PORT || 3331;
 
 // Server
-app.listen(port, () => console.log(`Listening on port ${port}`));
+var server = app.listen(port, () => console.log(`Listening on port ${port}`));
+server.setTimeout(500000);
