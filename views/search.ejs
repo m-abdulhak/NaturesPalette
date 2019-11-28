@@ -95,24 +95,27 @@
     </form>
   </div>
 </div>
-
+<br>
 
 <!-- Search Form -->
 <div class="row">
     <div class="col-md-12 ">
-        <form ref='searchForm' id='searchForm' action="/search" method="post" encType="multipart/form-data">
-          searchResult
           <% if (typeof searchResult !== 'undefined' && searchResult != null){ %>
           <div class="col-ms-12 text-center">
             <div class="alert alert-success" role="alert" style="line-height: 40px;">
               Results Found: <%= searchResult.length %> 
               <% if (searchResult.length > 0 ){ %>
-              <button type="button" class="btn btn-primary" style="position: absolute; right: 10px;" onclick="downloadAllResults()">Download All</button>
+              <!--<button type="button" class="btn btn-primary" style="position: absolute; right: 10px;" onclick="downloadAllResults()">Download All</button>-->         
+              <form ref='downloadForm' class="downloadForm" id='downloadForm' action="/search/downloadSearchResult" method="post">
+                <fieldset>
+                  <input type="text" class="form-control hidden" name="SearchResultId" id="SearchResultId" placeholder="SearchResultId" value="<%= searchResult[0].SearchResultId %>">
+                  <button type="submit" id="" class="btn btn-primary" value="Download!">Download</button>
+                </fieldset>
+              </form>
               <% } %>    
             </div>     
           </div>
-          <% } %>    
-        </form>
+          <% } %>  
     </div>
 </div>
 <div class="table-responsive" style="background: white;">

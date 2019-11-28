@@ -47,7 +47,7 @@ get_files = function(folder) {
 
 
 exports.zip = function(fileUrls){
-  var zip = new require('node-zip')();
+  /*var zip = new require('node-zip')();
 
   for(var file of fileUrls){
     var fn = path.basename(file);
@@ -60,21 +60,21 @@ exports.zip = function(fileUrls){
   var rand = uuidv1();
   var zipFileUrl = 'downloads/researchData'+ rand + '.zip';
   fs.writeFileSync(zipFileUrl, data, 'binary');
-  return zipFileUrl;
+  return zipFileUrl;*/
 
-  // creating archives
-  // var zip = new AdmZip();
-  // var rand = uuidv1();
+  //creating archives
+  var zip = new AdmZip();
+  var rand = uuidv1();
 
-  // for(var file of fileUrls){
-  //   // add local file
-  //   zip.addLocalFile(file);      
-  // }
-  // //
+  for(var file of fileUrls){
+    // add local file
+    zip.addLocalFile(file);      
+  }
+  //
   // var willSendthis = zip.toBuffer();
   // return willSendthis;
   // or write everything to disk
-  //var zipFileUrl = 'downloads/researchData'+ rand + '.zip';
-  //zip.writeZip(zipFileUrl);
-  //return zipFileUrl;
+  var zipFileUrl = 'downloads/researchData'+ rand + '.zip';
+  zip.writeZip(zipFileUrl);
+  return zipFileUrl;
 }
