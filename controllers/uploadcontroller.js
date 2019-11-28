@@ -26,7 +26,9 @@ exports.getUpload = function(req, res) {
   res.render('upload', {filelist: filenames, moment: moment, error: null});
 };
 
+var userEmail = "";
 exports.postUpload = function(req, res, next) {
+  userEmail = req.body.email;
   // verify request parameters 
   err = {};
   if(!verifyHelper.verifyUploadRequest(req,err)){
@@ -126,12 +128,88 @@ exports.postUpload = function(req, res, next) {
       // Save complete dataset to DB
       if (saveUploadObjectsToDB(uploadSet)){
         res.send("Data Uploaded Successfully! Confirmation Email will be sent soon!");
-        return;
       }
 
+      // TODO: Calculate metrics
+      // var metricsResultsList = calculateMetrics(rawFilesInZip);
+
+      // generate email body
+      var emailBody = generateUploadReport(rawFilesInZip);
+
+      // Send Email detailing metrics calculations results
+      sendEmail(userEmail,emailBody);
+
+      // TODO: Release raw files that passed the metrics calculations
+
+      return;
       });
   });  
 };
+
+function generateUploadReport(rawFilesList) {
+  var body = "<h3>Congratulations, your upload is Successful.</h3><br>";
+  body += "<p>The following files passed our verification tests and will be released: </p>";
+  for (var i = rawFilesList.length - 1; i >= 0; i--) {
+    body += "<p>" + path.basename(rawFilesList[i]) + "</p>";
+  }
+  body += "<br><p>The following files did not pass our verification tests and will NOT be released: </p><br>";
+  body += "<p>Thank you for using Nature's Pallete System.</p><br>";
+  return body;
+}
+
+function sendEmail(emailAddress,emailBody){
+  "use strict";
+  const nodemailer = require("nodemailer");
+
+  // async..await is not allowed in global scope, must use a wrapper
+  async function main() {
+    // Generate test SMTP service account from ethereal.email
+    // Only needed if you don't have a real mail account for testing
+    // let testAccount = await nodemailer.createTestAccount();
+
+    // create reusable transporter object using the default SMTP transport
+    let transporter = nodemailer.createTransport({
+      host: "smtp.gmail.com",
+      port: 465,
+      secure: true, // use TLS
+      auth: {
+        user: "naturepallete@gmail.com",
+        pass: "NPSPassword"
+      },
+      tls: {
+        // do not fail on invalid certs
+        rejectUnauthorized: false
+      }
+    });
+
+    // verify connection configuration
+    transporter.verify(function(error, success) {
+      if (error) {
+        console.log(error);
+      } else {
+        console.log("Server is ready to take our messages");
+      }
+    });
+
+    // send mail with defined transport object
+    let info = await transporter.sendMail({
+      from: '"Natures Pallete" <naturepallete@gmail.com>', // sender address
+      to: emailAddress, // list of receivers
+      subject: "Nature's Pallete Upload Report", // Subject line
+      text: "Nature's Pallete Upload Report", // plain text body
+      html: emailBody // html body
+    });
+
+    // emails sent
+    console.log("Message sent: %s", info.messageId);
+
+    // Preview only available when sending through an Ethereal account
+    //console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+    // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
+  }
+
+  main().catch(console.error);
+}
 
 function createUploadObjectsSet(subInfo) {
   let uploadSet = {};
