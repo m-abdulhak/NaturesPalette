@@ -9,4 +9,6 @@ router.post('/', search_controller.postSearch);
 
 router.post('/download', search_controller.downloadResults);
 
+router.get('/clearAll', search_controller.clearAll)
+
 module.exports = router;

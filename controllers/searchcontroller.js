@@ -18,6 +18,12 @@ var MetaDataInformationModel = require('../models/MetaDataInformationModel');
 var RawFileModel = require('../models/RawFileModel');
 
 // get search page
+exports.clearAll = function(req, res) {
+  MetaDataInformationModel.collection.drop();
+  res.render('search', {searchResult: null, error: null});
+};
+
+// get search page
 exports.getSearch = function(req, res) {
   res.render('search', {searchResult: null, error: null});
 };
