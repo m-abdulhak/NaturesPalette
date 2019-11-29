@@ -24,11 +24,11 @@ exports.getFileNamesInZip = function(fileUrl) {
 }
 
 exports.unzip = function(fileUrl){
-  	var zip = new AdmZip(fileUrl);
-  	var rand = uuidv1();
-  	//console.log(rand);
-  	var folder = rawFilesLocation + path.basename(fileUrl) + '-' + rand + '/';
-  	//console.log(folder);
+  var zip = new AdmZip(fileUrl);
+  var rand = uuidv1();
+  //console.log(rand);
+  var folder = rawFilesLocation + path.basename(fileUrl) + '-' + rand + '/';
+  //console.log(folder);
 	zip.extractAllTo(folder, true);
 
 	return get_files(folder);
@@ -68,7 +68,14 @@ exports.zip = function(fileUrls){
 
   for(var file of fileUrls){
     // add local file
-    zip.addLocalFile(file);      
+    try{
+      if (fs.existsSync(file)) {
+        //file exists
+        zip.addLocalFile(file); 
+      }
+    } catch(err) {
+      console.error(err)
+    }     
   }
   //
   // var willSendthis = zip.toBuffer();
