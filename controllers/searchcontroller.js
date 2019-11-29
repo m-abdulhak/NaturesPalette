@@ -27,7 +27,7 @@ exports.clearAll = function(req, res) {
   })
 };
 
- async function getEnabledSearchTerms() {
+async function getEnabledSearchTerms() {
   let terms = await SearchTermModel.find({Enabled: true});
   return terms;
 }
@@ -42,64 +42,65 @@ exports.getSearch = function(req, res) {
 // get search result 
 exports.postSearch = function(req, res, next) {
   //console.log(req.body);
-  var query = extractSearchQueryFromReq(req.body);
-  var columns = '_id rawFileId genus specificepithet infraspecificepithet sex lifestage patch url';
-  //console.log(query);
-  MetaDataInformationModel.find(query, columns, async function(err, metaDatas){
-    if(err){
-      console.log("Error retrieving meta data information from DB: " + err);
-    } else{
-      var searchResultIns = {};
-      searchResultIns._id = mongoose.Types.ObjectId();
-
-      var results = [];
-      var resultsSigList = [];
-      var ids = [];
-      for(var metaData of metaDatas){
-        // push id into ids list 
-        ids.push(metaData._id);
-
-        var sig = getSearchRowSignature(metaData);
-        if(resultsSigList.indexOf(sig) === -1){
-          // create result object and fill metadata info
-          var result = {};
-          result.SearchResultId = searchResultIns._id;
-          result.TotalSearchResultCount = metaDatas.length;
-          result._id = metaData._id;
-          result.rawFileId = metaData.rawFileId;
-          result.genus = metaData.genus;
-          result.specificepithet = metaData.specificepithet;
-          result.infraspecificepithet = metaData.infraspecificepithet;
-          result.sex = metaData.sex;
-          result.lifestage = metaData.lifestage;
-          result.patch = metaData.patch;
-          //var rFile = await RawFileModel.findById(metaData.rawFileId);
-          //result.url = path.resolve(path.normalize(rFile.path));
-
-          results.push(result);
-          resultsSigList.push(sig);
-        }      
-      }
-
-      //save ids in search result
-      searchResultIns.MetaDataInformationIds = ids;
-
-      // save search result
-      SearchResultModel.create(searchResultIns, function (err, searchResult_instance) {
-        if (err){
-          console.log("SearchResult save ERROR! " + err);
-          return false;
+  extractSearchQueryFromReq(req.body).then(function (query) {
+    var columns = '_id rawFileId genus specificepithet infraspecificepithet sex lifestage patch url';
+    //console.log(query);
+    MetaDataInformationModel.find(query, columns, async function(err, metaDatas){
+      if(err){
+        console.log("Error retrieving meta data information from DB: " + err);
+      } else{
+        var searchResultIns = {};
+        searchResultIns._id = mongoose.Types.ObjectId();
+  
+        var results = [];
+        var resultsSigList = [];
+        var ids = [];
+        for(var metaData of metaDatas){
+          // push id into ids list 
+          ids.push(metaData._id);
+  
+          var sig = getSearchRowSignature(metaData);
+          if(resultsSigList.indexOf(sig) === -1){
+            // create result object and fill metadata info
+            var result = {};
+            result.SearchResultId = searchResultIns._id;
+            result.TotalSearchResultCount = metaDatas.length;
+            result._id = metaData._id;
+            result.rawFileId = metaData.rawFileId;
+            result.genus = metaData.genus;
+            result.specificepithet = metaData.specificepithet;
+            result.infraspecificepithet = metaData.infraspecificepithet;
+            result.sex = metaData.sex;
+            result.lifestage = metaData.lifestage;
+            result.patch = metaData.patch;
+            //var rFile = await RawFileModel.findById(metaData.rawFileId);
+            //result.url = path.resolve(path.normalize(rFile.path));
+  
+            results.push(result);
+            resultsSigList.push(sig);
+          }      
         }
-      });
-
-      var ret = JSON.stringify(results);
-      
-      getEnabledSearchTerms().then( function (searchTermList) {
-        res.render('search', {searchResult: results, searchTerms: searchTermList, error: null});
-        //console.log('retrieved meta data information', ret);
-        return;   
-      })
-    }
+  
+        //save ids in search result
+        searchResultIns.MetaDataInformationIds = ids;
+  
+        // save search result
+        SearchResultModel.create(searchResultIns, function (err, searchResult_instance) {
+          if (err){
+            console.log("SearchResult save ERROR! " + err);
+            return false;
+          }
+        });
+  
+        var ret = JSON.stringify(results);
+        
+        getEnabledSearchTerms().then( function (searchTermList) {
+          res.render('search', {searchResult: results, searchTerms: searchTermList, error: null});
+          //console.log('retrieved meta data information', ret);
+          return;   
+        })
+      }
+    });    
   });
 };
 
@@ -219,18 +220,26 @@ const searchTerms = ["institutioncode",
 "patch"];
 
 // helper methods
-function extractSearchQueryFromReq(reqBody) {
+async function extractSearchQueryFromReq(reqBody) {
   var query = {};
-  for(var term of searchTerms){
+
+  var searchTermsList = await SearchTermModel.find({Enabled: true},'Name');
+  searchTermsList = searchTermsList.map(x=>x.Name);
+
+  for(var term of searchTermsList){
     var termVal = getSearchTermsFor(reqBody,term);
-    if(termVal!=null){
+    if(Array.isArray(termVal)){
+      termVal = termVal[0];
+    }
+    if(termVal!=null && termVal != ""){
       var termValsList = termVal.trim().split(' OR ').map(element => {
         //return '/'+element.toLowerCase().trim()+'/i';
         return new RegExp('\\b' + element.toLowerCase().trim() + '\\b', 'i');
-      });
+      }).filter(function(e){return e});
       query[term] = { $in : termValsList };
     }
   }
+
   return query;
 }
 
