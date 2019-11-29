@@ -17,16 +17,26 @@ var MetaDataFileModel = require('../models/MetaDataFileModel');
 var MetaDataInformationModel = require('../models/MetaDataInformationModel');
 var RawFileModel = require('../models/RawFileModel');
 var SearchResultModel = require('../models/SearchResultModel');
+var SearchTermModel = require('../models/SearchTermModel');
 
 // drop MetaDataInformation Collection (For testing only)
 exports.clearAll = function(req, res) {
   MetaDataInformationModel.collection.drop();
-  res.render('search', {searchResult: null, error: null});
+  getEnabledSearchTerms().then( function (searchTermList) {
+    res.render('search', {searchResult: null, searchTerms: searchTermList, error: null});    
+  })
 };
+
+ async function getEnabledSearchTerms() {
+  let terms = await SearchTermModel.find({Enabled: true});
+  return terms;
+}
 
 // get search page
 exports.getSearch = function(req, res) {
-  res.render('search', {searchResult: null, error: null});
+  getEnabledSearchTerms().then( function (searchTermList) {
+    res.render('search', {searchResult: null, searchTerms: searchTermList, error: null});    
+  })
 };
 
 // get search result 
@@ -83,9 +93,12 @@ exports.postSearch = function(req, res, next) {
       });
 
       var ret = JSON.stringify(results);
-      res.render('search', {searchResult: results, error: null});
-      //console.log('retrieved meta data information', ret);
-      return;
+      
+      getEnabledSearchTerms().then( function (searchTermList) {
+        res.render('search', {searchResult: results, searchTerms: searchTermList, error: null});
+        //console.log('retrieved meta data information', ret);
+        return;   
+      })
     }
   });
 };

@@ -40,57 +40,58 @@
         <li>Refine by Color Space</li>
       </ul>
       <fieldset>
-        <h4 class="mb-3">Please enter search query fields</h4>
-        <div class="row serach-query-row">
-          <div class="col-md-4">
+        <h4 class="mb-3">Search Query </h4>
+          <div class="col-md-3">
             <input type="text" class="form-control" name="institutioncode" id="institutioncode" placeholder="Institution code" value="">
           </div>
-          <div class="col-md-4">
+          <div class="col-md-3">
             <input type="text" class="form-control" name="collectioncode" id="collectioncode" placeholder="Collection code" value="">
           </div>
-          <div class="col-md-4">
+          <div class="col-md-3">
             <input type="text" class="form-control" name="cataloguenumber" id="cataloguenumber" placeholder="Catalogue number" value="">
           </div>
-        </div>
-        <div class="row serach-query-row">
-          <div class="col-md-4">
+          <div class="col-md-3">
             <input type="text" class="form-control" name="class" id="class" placeholder="Class" value="">
           </div>
-          <div class="col-md-4">
+          <div class="col-md-3">
             <input type="text" class="form-control" name="order" id="order" placeholder="Order" value="">
           </div>
-          <div class="col-md-4">
+          <div class="col-md-3">
             <input type="text" class="form-control" name="family" id="family" placeholder="Family" value="">
           </div>
-        </div>
-        <div class="row serach-query-row">
-          <div class="col-md-4">
+          <div class="col-md-3">
             <input type="text" class="form-control" name="genus" id="genus" placeholder="Genus" value="">
           </div>
-          <div class="col-md-4">
+          <div class="col-md-3">
             <input type="text" class="form-control" name="specificepithet" id="specificepithet" placeholder="Specific epithet" value="">
           </div>
-          <div class="col-md-4">
+          <div class="col-md-3">
             <input type="text" class="form-control" name="infraSpecificepithet" id="infraSpecificepithet" placeholder="Intraspecific Epithet" value="">
           </div>
-        </div>
-        <div class="row serach-query-row">
-          <div class="col-md-4">
+          <div class="col-md-3">
             <input type="text" class="form-control" name="sex" id="sex" placeholder="Sex" value="">
           </div>
-          <div class="col-md-4">
+          <div class="col-md-3">
             <input type="text" class="form-control" name="lifestage" id="lifestage" placeholder="Life stage" value="">
           </div>
-          <div class="col-md-4">
+          <div class="col-md-3">
             <input type="text" class="form-control" name="country" id="country" placeholder="Country" value="">
           </div>
-        </div>
-        <div class="row serach-query-row">
-          <div class="col-md-4">
+          <div class="col-md-3">
             <input type="text" class="form-control" name="patch" id="patch" placeholder="Patch" value="">
           </div>
-        </div>
-        <button type="submit" id="" class="multi-form-submit-btn" value="Search!">Search</button>
+          
+          <% if (typeof searchTerms !== 'undefined' && searchTerms != null){ %>
+            <% console.log(searchTerms); for (var i = 0; i < searchTerms.length; i++) { %>
+              <div class="col-md-3">
+                <input type="text" class="form-control" name="<%= searchTerms[i].Name %>" 
+                  id="<%= searchTerms[i].Name %>" placeholder="<%= searchTerms[i].Placeholder %>" 
+                  value="">
+              </div>
+            <% } %>
+          <% } %>  
+
+        <button style="display: block; margin: auto;" type="submit" id="" class="multi-form-submit-btn" value="Search!">Search</button>
       </fieldset>
     </form>
   </div>
