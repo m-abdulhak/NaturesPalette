@@ -133,6 +133,15 @@ exports.downloadSearchResult = function(req, res, next) {
           var submissionInfoIds = [];
           var submissionInfos = [];
 
+	      if(metaDatas.length>200){
+	          console.log("Eror Too Much Data!");	
+
+			  getEnabledSearchTerms().then( function (searchTermList) {
+		          res.render('search', {searchResult: null, searchTerms: searchTermList, error: "Too Much Data Selected! Please Refine Your Search! (200 Results or Less allowed for download)"});
+			  })
+	          return;         	
+	      }
+
           for(var metaData of metaDatas){
             // get raw file corresponding to this data row
             var rFile = await RawFileModel.findById(metaData.rawFileId);

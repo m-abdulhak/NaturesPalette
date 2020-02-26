@@ -83,7 +83,7 @@
           </div>
           -->
           <% if (typeof searchTerms !== 'undefined' && searchTerms != null){ %>
-            <% console.log(searchTerms); for (var i = 0; i < searchTerms.length; i++) { %>
+            <% for (var i = 0; i < searchTerms.length; i++) { %>
               <div class="col-md-3">
                 <input type="text" class="form-control" name="<%= searchTerms[i].Name %>" 
                   id="<%= searchTerms[i].Name %>" placeholder="<%= searchTerms[i].Placeholder %>" 
