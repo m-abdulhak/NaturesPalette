@@ -11,12 +11,17 @@ Soure code: https://github.com/m-abdulhak/NaturesPalette.git
 Developed by Mohammed Abdullhak (m_abdulhak@outlook.com)
 
 RequiredSoftware
+
 ⦁	Node.js
+
 ⦁	MongoDB
 
-Installation steps
 To run the project locally:
+
 ⦁	Clone it.
+
 ⦁	Open models.js file and replace the mongoDB mongoose connection string.
+
 ⦁	Run: node app.js from terminal. 
+
 ⦁	Access the portal at http://localhost:3331/
